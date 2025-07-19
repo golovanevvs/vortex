@@ -13,11 +13,11 @@ type Config struct {
 }
 
 type appConfig struct {
-	addr string
+	Addr string
 }
 
 type loggerConfig struct {
-	logLevel string
+	LogLevel string
 }
 
 func New() *Config {
@@ -41,8 +41,8 @@ func (c *Config) Load(path string) error {
 		return err
 	}
 
-	c.AppConfig.addr = c.GetString("server.addr")
-	c.LoggerConfig.logLevel = c.GetString("logging.level")
+	c.AppConfig.Addr = c.GetString("server.addr")
+	c.LoggerConfig.LogLevel = c.GetString("logging.level")
 
 	return nil
 }
