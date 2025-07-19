@@ -7,7 +7,17 @@ import (
 )
 
 type Config struct {
-	v *viper.Viper
+	v            *viper.Viper
+	AppConfig    appConfig
+	LoggerConfig loggerConfig
+}
+
+type appConfig struct {
+	addr string
+}
+
+type loggerConfig struct {
+	logLevel string
 }
 
 func New() *Config {
@@ -26,8 +36,15 @@ func (c *Config) SetEnvPrefix(prefix string) {
 
 func (c *Config) Load(path string) error {
 	c.v.SetConfigFile(path)
+	err := c.v.ReadInConfig()
+	if err != nil {
+		return err
+	}
 
-	return c.v.ReadInConfig()
+	c.AppConfig.addr = c.GetString("server.addr")
+	c.LoggerConfig.logLevel = c.GetString("logging.level")
+
+	return nil
 }
 
 func (c *Config) GetString(key string) string {
