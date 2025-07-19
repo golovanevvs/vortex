@@ -15,3 +15,7 @@ func Init() {
 		Caller().
 		Logger()
 }
+
+func ParseLogLevel(level string) (zerolog.Level, error) {
+	return zerolog.ParseLevel(level)
+}
