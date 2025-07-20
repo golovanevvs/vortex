@@ -3,6 +3,7 @@ package ginext
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"strings"
 	"time"
 
@@ -67,24 +68,27 @@ func (e Engine) WithLogging(logger *zerolog.Logger) gin.HandlerFunc {
 			Int("Response size", c.Writer.Size())
 
 		if logLevel <= zerolog.DebugLevel && writer != nil {
-			logCtx = logCtx.Str("Response body", writer.body.String())
 			if body := writer.body.String(); body != "" {
 				if strings.Contains(writer.Header().Get("Content-Type"), "application/json") {
 					var pretty bytes.Buffer
 					if err := json.Indent(&pretty, []byte(body), "", "  "); err != nil {
-						logCtx = logCtx.RawJSON("response", []byte(body))
+						fmt.Println("Вариант 1")
+						logCtx = logCtx.RawJSON("Response body", []byte(body))
 					} else {
-						logCtx = logCtx.RawJSON("response", []byte(pretty.Bytes()))
+						fmt.Println("Вариант 2")
+						logCtx = logCtx.RawJSON("Response body", []byte(pretty.Bytes()))
 					}
 				} else {
 					var truncateBody string
 					maxLenBody := 1024
 					if len(body) < maxLenBody {
+						fmt.Println("Вариант 3")
 						truncateBody = body
 					} else {
+						fmt.Println("Вариант 4")
 						truncateBody = body[:maxLenBody] + "...[truncated]"
 					}
-					logCtx = logCtx.Str("response", truncateBody)
+					logCtx = logCtx.Str("Response body", truncateBody)
 				}
 			}
 		}
