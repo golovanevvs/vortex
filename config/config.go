@@ -3,6 +3,7 @@ package config
 import (
 	"strings"
 
+	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
 )
 
@@ -21,15 +22,17 @@ type loggerConfig struct {
 }
 
 func New(envPrefix string) *Config {
+	_ = godotenv.Load()
+
 	v := viper.New()
 
 	v.AutomaticEnv()
 
-	v.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
-
 	if envPrefix != "" {
 		v.SetEnvPrefix(envPrefix)
 	}
+
+	v.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 
 	return &Config{v: v}
 }
