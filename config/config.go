@@ -23,7 +23,7 @@ type loggerConfig struct {
 }
 
 func New(envPrefix string) *Config {
-	err := godotenv.Load()
+	err := godotenv.Load("../../.env")
 	if err != nil {
 		fmt.Println(err)
 	}
