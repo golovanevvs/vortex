@@ -21,28 +21,25 @@ type loggerConfig struct {
 	LogLevel string
 }
 
-func New(envPrefix string, pathEnvFile string) *Config {
-	godotenv.Load(pathEnvFile)
+func New() *Config {
 
 	v := viper.New()
-
-	v.AutomaticEnv()
-
-	if envPrefix != "" {
-		v.SetEnvPrefix(envPrefix)
-	}
-
-	v.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 
 	return &Config{v: v}
 }
 
-func (c *Config) SetEnvPrefix(prefix string) {
-	c.v.SetEnvPrefix(prefix)
-}
+func (c *Config) Load(pathConfigFile string, pathEnvFile string, envPrefix string) error {
+	godotenv.Load(pathEnvFile)
 
-func (c *Config) Load(path string) error {
-	c.v.SetConfigFile(path)
+	c.v.AutomaticEnv()
+
+	if envPrefix != "" {
+		c.v.SetEnvPrefix(envPrefix)
+	}
+
+	c.v.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+
+	c.v.SetConfigFile(pathConfigFile)
 	err := c.v.ReadInConfig()
 	if err != nil {
 		return err
