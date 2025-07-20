@@ -2,18 +2,21 @@ package config
 
 import (
 	"strings"
+	"time"
 
+	"github.com/golovanevvs/vortex/rabbitmq"
 	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
 )
 
 type Config struct {
-	v            *viper.Viper
-	AppConfig    appConfig
-	LoggerConfig loggerConfig
+	v              *viper.Viper
+	ServerConfig   serverConfig
+	LoggerConfig   loggerConfig
+	RabbitMQConfig rabbitmq.Config
 }
 
-type appConfig struct {
+type serverConfig struct {
 	Addr string
 }
 
@@ -45,8 +48,24 @@ func (c *Config) Load(pathConfigFile string, pathEnvFile string, envPrefix strin
 		return err
 	}
 
-	c.AppConfig.Addr = c.GetString("server.addr")
+	c.ServerConfig.Addr = c.GetString("server.addr")
+
 	c.LoggerConfig.LogLevel = c.GetString("logging.level")
+
+	c.RabbitMQConfig.URL = c.GetString("rabbitmq.url")
+	c.RabbitMQConfig.ReconnectDelay = time.Duration(c.GetInt("rabbitmq.reconnect_delay"))
+	c.RabbitMQConfig.MaxReconnect = c.GetInt("rabbitmq.max_reconnect")
+	c.RabbitMQConfig.Exchange = c.GetString("rabbitmq.exchange")
+	c.RabbitMQConfig.ExchangeType = c.GetString("rabbitmq.exchange_type")
+	c.RabbitMQConfig.Queue = c.GetString("rabbitmq.queue")
+	c.RabbitMQConfig.RoutingKey = c.GetString("rabbitmq.routing_key")
+	c.RabbitMQConfig.Durable = c.GetBool("rabbitmq.durable")
+	c.RabbitMQConfig.AutoDelete = c.GetBool("rabbitmq.auto_delete")
+	c.RabbitMQConfig.Exclusive = c.GetBool("rabbitmq.exclusive")
+	c.RabbitMQConfig.NoWait = c.GetBool("rabbitmq.no_wait")
+	c.RabbitMQConfig.PrefetchCount = c.GetInt("rabbitmq.prefetch_count")
+	c.RabbitMQConfig.PrefetchSize = c.GetInt("rabbitmq.prefetch_size")
+	c.RabbitMQConfig.GlobalPrefetch = c.GetBool("rabbitmq.global_prefetch")
 
 	return nil
 }
