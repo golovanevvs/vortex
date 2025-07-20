@@ -20,12 +20,16 @@ type loggerConfig struct {
 	LogLevel string
 }
 
-func New() *Config {
+func New(envPrefix *string) *Config {
 	v := viper.New()
 
 	v.AutomaticEnv()
 
 	v.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+
+	if envPrefix != nil {
+		v.SetEnvPrefix(*envPrefix)
+	}
 
 	return &Config{v: v}
 }
