@@ -21,8 +21,8 @@ type loggerConfig struct {
 	LogLevel string
 }
 
-func New(envPrefix string) *Config {
-	godotenv.Load("../../.env")
+func New(envPrefix string, pathEnvFile string) *Config {
+	godotenv.Load(pathEnvFile)
 
 	v := viper.New()
 
