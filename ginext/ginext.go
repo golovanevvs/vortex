@@ -55,59 +55,41 @@ func (e Engine) WithLogging(logger *zerolog.Logger) gin.HandlerFunc {
 
 		c.Next()
 
-		logCtx := logger.With().Logger()
-
-		// logCtx := logger.With().
-		// 	Str("Request method", c.Request.Method).
-		// 	Str("Request path", c.Request.URL.Path).
-		// 	Str("Request query", c.Request.URL.RawQuery).
-		// 	Str("Request ip", c.ClientIP()).
-		// 	Str("Request Content-Type", c.ContentType()).
-		// 	Str("Request user-agent", c.Request.UserAgent()).
-		// 	Int("Response status", c.Writer.Status()).
-		// 	Int("Response size", c.Writer.Size())
-
-		fields := map[string]any{
-			"Request method":       c.Request.Method,
-			"Request path":         c.Request.URL.Path,
-			"Request query":        c.Request.URL.RawQuery,
-			"Request ip":           c.ClientIP(),
-			"Request Content-Type": c.ContentType(),
-			"Request user-agent":   c.Request.UserAgent(),
-			"Response status":      c.Writer.Status(),
-			"Response size":        c.Writer.Size(),
-		}
+		logCtx := logger.With().
+			Str("Request method", c.Request.Method).
+			Str("Request path", c.Request.URL.Path).
+			Str("Request query", c.Request.URL.RawQuery).
+			Str("Request ip", c.ClientIP()).
+			Str("Request Content-Type", c.ContentType()).
+			Str("Request user-agent", c.Request.UserAgent()).
+			Int("Response status", c.Writer.Status()).
+			Int("Response size", c.Writer.Size())
 
 		if logLevel <= zerolog.DebugLevel && writer != nil {
 			if body := writer.body.String(); body != "" {
 				if strings.Contains(writer.Header().Get("Content-Type"), "application/json") {
 					var pretty bytes.Buffer
 					if err := json.Indent(&pretty, []byte(body), "", "  "); err != nil {
-						// logCtx = logCtx.RawJSON("Response body", []byte(body))
-						fields["Response body"] = pretty.String()
+						logCtx = logCtx.RawJSON("Response body", []byte(body))
 					} else {
-						// logCtx = logCtx.RawJSON("Response body", []byte(pretty.Bytes()))
-						fields["Response body"] = body
+						logCtx = logCtx.RawJSON("Response body", []byte(pretty.Bytes()))
 					}
 				} else {
-					// var truncateBody string
+					var truncateBody string
 					maxLenBody := 1024
 					if len(body) > maxLenBody {
-						// truncateBody = body[:maxLenBody] + "...[truncated]"
-						fields["Response body"] = body[:maxLenBody] + "...[truncated]"
+						truncateBody = body[:maxLenBody] + "...[truncated]"
 					} else {
-						// truncateBody = body
-						// logCtx = logCtx.Str("Response body", truncateBody)
-						fields["Response body"] = body
+						truncateBody = body
 					}
+					logCtx = logCtx.Str("Response body", truncateBody)
 				}
 			}
 		}
 
-		// logCtx = logCtx.Dur("latency", time.Since(start))
-		fields["Latency"] = time.Since(start)
+		logCtx = logCtx.Dur("latency", time.Since(start))
 
-		// log := logCtx.Logger()
+		log := logCtx.Logger()
 
 		msg := "Request handled"
 
@@ -116,13 +98,13 @@ func (e Engine) WithLogging(logger *zerolog.Logger) gin.HandlerFunc {
 			for i, e := range c.Errors {
 				errors[i] = e.Err
 			}
-			logCtx.Error().Errs("errors", errors).Msg(msg)
+			log.Error().Errs("errors", errors).Msg(msg)
 		} else {
 			switch {
 			case logLevel <= zerolog.DebugLevel:
-				logCtx.Debug().Fields(fields).Msg(msg)
+				log.Debug().Msg(msg)
 			case logLevel <= zerolog.InfoLevel:
-				logCtx.Info().Fields(fields).Msg(msg)
+				log.Info().Msg(msg)
 			}
 		}
 	}
