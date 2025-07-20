@@ -2,6 +2,7 @@ package rabbitmq
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"time"
 
@@ -16,20 +17,25 @@ type Client struct {
 }
 
 type Config struct {
-	URL            string
-	ReconnectDelay time.Duration
-	MaxReconnect   int
-	Exchange       string
-	ExchangeType   string
-	Queue          string
-	RoutingKey     string
-	Durable        bool
-	AutoDelete     bool
-	Exclusive      bool
-	NoWait         bool
-	PrefetchCount  int
-	PrefetchSize   int
-	GlobalPrefetch bool
+	URL             string
+	ReconnectDelay  time.Duration
+	MaxReconnect    int
+	Exchange        string
+	ExchangeType    string
+	Queue           string
+	RoutingKey      string
+	Durable         bool
+	AutoDelete      bool
+	Internal        bool
+	Exclusive       bool
+	NoWait          bool
+	PrefetchCount   int
+	PrefetchSize    int
+	GlobalPrefetch  bool
+	Mandatory       bool
+	Immediate       bool
+	DelayedExchange string
+	DelayedQueue    string
 }
 
 // Конструктор нового клиента
@@ -87,7 +93,7 @@ func (c *Client) setup() error {
 			c.config.ExchangeType,
 			c.config.Durable,
 			c.config.AutoDelete,
-			false,
+			c.config.Internal,
 			c.config.NoWait,
 			nil,
 		); err != nil {
@@ -119,11 +125,51 @@ func (c *Client) setup() error {
 				return err
 			}
 		}
+
+		if c.config.DelayedExchange != "" {
+			args := amqp.Table{"x-delayed-type": "direct"}
+			if err := c.channel.ExchangeDeclare(
+				c.config.DelayedExchange,
+				"x-delayed-message",
+				c.config.Durable,
+				c.config.AutoDelete,
+				c.config.Internal,
+				c.config.NoWait,
+				args,
+			); err != nil {
+				return fmt.Errorf("failed to declare delayed exchange: %w", err)
+			}
+
+			if c.config.DelayedQueue != "" {
+				_, err := c.channel.QueueDeclare(
+					c.config.DelayedQueue,
+					c.config.Durable,
+					c.config.AutoDelete,
+					c.config.Exclusive,
+					c.config.NoWait,
+					nil,
+				)
+				if err != nil {
+					return fmt.Errorf("failed to declare delayed queue: %w", err)
+				}
+
+				if err := c.channel.QueueBind(
+					c.config.DelayedQueue,
+					c.config.RoutingKey,
+					c.config.DelayedExchange,
+					c.config.NoWait,
+					nil,
+				); err != nil {
+					return fmt.Errorf("failed to bind delayed queue: %w", err)
+				}
+			}
+		}
 	}
 
 	return nil
 }
 
+// TODO! Переделать логи на ошибки или прокинуть логгер
 // Слушатель реконнектов
 func (c *Client) reconnectListener() {
 	for {
@@ -159,8 +205,35 @@ func (c *Client) Publish(body []byte, headers amqp.Table) error {
 	return c.channel.Publish(
 		c.config.Exchange,
 		c.config.RoutingKey,
-		false,
-		false,
+		c.config.Mandatory,
+		c.config.Immediate,
+		amqp.Publishing{
+			ContentType: "application/json",
+			Body:        body,
+			Headers:     headers,
+		},
+	)
+}
+
+func (c *Client) PublishDelayed(body []byte, headers amqp.Table, delay time.Duration) error {
+	if c.channel == nil {
+		return errors.New("channel not initialized")
+	}
+	if c.config.DelayedExchange == "" {
+		return errors.New("delayed exchange not configured")
+	}
+
+	// Добавляем заголовок x-delay с указанием задержки в миллисекундах
+	if headers == nil {
+		headers = make(amqp.Table)
+	}
+	headers["x-delay"] = int(delay.Milliseconds())
+
+	return c.channel.Publish(
+		c.config.DelayedExchange,
+		c.config.RoutingKey,
+		c.config.Mandatory,
+		c.config.Immediate,
 		amqp.Publishing{
 			ContentType: "application/json",
 			Body:        body,

@@ -61,11 +61,14 @@ func (c *Config) Load(pathConfigFile string, pathEnvFile string, envPrefix strin
 	c.RabbitMQConfig.RoutingKey = c.GetString("rabbitmq.routing_key")
 	c.RabbitMQConfig.Durable = c.GetBool("rabbitmq.durable")
 	c.RabbitMQConfig.AutoDelete = c.GetBool("rabbitmq.auto_delete")
+	c.RabbitMQConfig.Internal = c.GetBool("rabbitmq.internal")
 	c.RabbitMQConfig.Exclusive = c.GetBool("rabbitmq.exclusive")
 	c.RabbitMQConfig.NoWait = c.GetBool("rabbitmq.no_wait")
 	c.RabbitMQConfig.PrefetchCount = c.GetInt("rabbitmq.prefetch_count")
 	c.RabbitMQConfig.PrefetchSize = c.GetInt("rabbitmq.prefetch_size")
 	c.RabbitMQConfig.GlobalPrefetch = c.GetBool("rabbitmq.global_prefetch")
+	c.RabbitMQConfig.Mandatory = c.GetBool("rabbitmq.mandatory")
+	c.RabbitMQConfig.Immediate = c.GetBool("rabbitmq.immediate")
 
 	return nil
 }
