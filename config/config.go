@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/joho/godotenv"
@@ -22,7 +23,10 @@ type loggerConfig struct {
 }
 
 func New(envPrefix string) *Config {
-	_ = godotenv.Load()
+	err := godotenv.Load()
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	v := viper.New()
 
