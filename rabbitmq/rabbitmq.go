@@ -103,7 +103,7 @@ func (c *Client) setup() error {
 			c.config.NoWait,
 			nil,
 		); err != nil {
-			return err
+			return fmt.Errorf("failed to declare exchange: %w", err)
 		}
 	}
 
@@ -117,7 +117,7 @@ func (c *Client) setup() error {
 			nil,
 		)
 		if err != nil {
-			return err
+			return fmt.Errorf("failed to declare queue: %w", err)
 		}
 
 		if c.config.Exchange != "" && c.config.RoutingKey != "" {
@@ -128,7 +128,7 @@ func (c *Client) setup() error {
 				c.config.NoWait,
 				nil,
 			); err != nil {
-				return err
+				return fmt.Errorf("failed to bind queue: %w", err)
 			}
 		}
 
