@@ -1,6 +1,7 @@
 package rabbitmq
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"time"
@@ -11,6 +12,7 @@ import (
 
 // RabbitMQ клиент
 type Client struct {
+	cancel  context.CancelFunc
 	logger  *zerolog.Logger
 	conn    *amqp.Connection
 	channel *amqp.Channel
@@ -40,8 +42,9 @@ type Config struct {
 }
 
 // Конструктор нового клиента
-func New(config Config, logger *zerolog.Logger) (*Client, error) {
+func New(cancel context.CancelFunc, config Config, logger *zerolog.Logger) (*Client, error) {
 	client := &Client{
+		cancel: cancel,
 		logger: logger,
 		config: config}
 
@@ -193,7 +196,8 @@ func (c *Client) reconnectListener() {
 		}
 
 		if err != nil {
-			c.logger.Fatal().Err(err).Msgf("Failed to reconnect after %d attempts", c.config.MaxReconnect)
+			c.logger.Error().Err(err).Msgf("Failed to reconnect after %d attempts", c.config.MaxReconnect)
+			c.cancel()
 			return
 		}
 	}
