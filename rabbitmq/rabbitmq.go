@@ -41,7 +41,9 @@ type Config struct {
 
 // Конструктор нового клиента
 func New(config Config, logger *zerolog.Logger) (*Client, error) {
-	client := &Client{config: config}
+	client := &Client{
+		logger: logger,
+		config: config}
 
 	if err := client.connect(); err != nil {
 		return nil, err
