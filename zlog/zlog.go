@@ -12,7 +12,6 @@ func Init() {
 	Logger = zerolog.New(os.Stdout).
 		With().
 		Timestamp().
-		Caller().
 		Logger()
 }
 
