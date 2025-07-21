@@ -13,7 +13,7 @@ import (
 // RabbitMQ клиент
 type Client struct {
 	cancel  context.CancelFunc
-	logger  *zerolog.Logger
+	logger  zerolog.Logger
 	conn    *amqp.Connection
 	channel *amqp.Channel
 	config  Config
@@ -45,7 +45,7 @@ type Config struct {
 func New(cancel context.CancelFunc, config Config, logger *zerolog.Logger) (*Client, error) {
 	client := &Client{
 		cancel: cancel,
-		logger: logger,
+		logger: logger.With().Str("component", "RabbitMQ").Logger(),
 		config: config}
 
 	if err := client.connect(); err != nil {
