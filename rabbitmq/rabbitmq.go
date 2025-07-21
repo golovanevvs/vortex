@@ -18,25 +18,25 @@ type Client struct {
 }
 
 type Config struct {
-	URL             string
-	ReconnectDelay  time.Duration
-	MaxReconnect    int
-	Exchange        string
-	ExchangeType    string
-	Queue           string
-	RoutingKey      string
-	Durable         bool
-	AutoDelete      bool
-	Internal        bool
-	Exclusive       bool
-	NoWait          bool
-	PrefetchCount   int
-	PrefetchSize    int
-	GlobalPrefetch  bool
-	Mandatory       bool
-	Immediate       bool
-	DelayedExchange string
-	DelayedQueue    string
+	URL                   string
+	ReconnectDelaySeconds int
+	MaxReconnect          int
+	Exchange              string
+	ExchangeType          string
+	Queue                 string
+	RoutingKey            string
+	Durable               bool
+	AutoDelete            bool
+	Internal              bool
+	Exclusive             bool
+	NoWait                bool
+	PrefetchCount         int
+	PrefetchSize          int
+	GlobalPrefetch        bool
+	Mandatory             bool
+	Immediate             bool
+	DelayedExchange       string
+	DelayedQueue          string
 }
 
 // Конструктор нового клиента
@@ -189,7 +189,7 @@ func (c *Client) reconnectListener() {
 				break
 			}
 
-			time.Sleep(c.config.ReconnectDelay)
+			time.Sleep(time.Duration(c.config.ReconnectDelaySeconds) * time.Second)
 		}
 
 		if err != nil {

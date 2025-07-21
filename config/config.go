@@ -2,7 +2,6 @@ package config
 
 import (
 	"strings"
-	"time"
 
 	"github.com/golovanevvs/vortex/rabbitmq"
 	"github.com/joho/godotenv"
@@ -53,7 +52,7 @@ func (c *Config) Load(pathConfigFile string, pathEnvFile string, envPrefix strin
 	c.LoggerConfig.LogLevel = c.GetString("logging.level")
 
 	c.RabbitMQConfig.URL = c.GetString("rabbitmq.url")
-	c.RabbitMQConfig.ReconnectDelay = time.Duration(c.GetInt("rabbitmq.reconnect_delay"))
+	c.RabbitMQConfig.ReconnectDelaySeconds = c.GetInt("rabbitmq.reconnect_delay_seconds")
 	c.RabbitMQConfig.MaxReconnect = c.GetInt("rabbitmq.max_reconnect")
 	c.RabbitMQConfig.Exchange = c.GetString("rabbitmq.exchange")
 	c.RabbitMQConfig.ExchangeType = c.GetString("rabbitmq.exchange_type")
