@@ -3,14 +3,15 @@ package rabbitmq
 import (
 	"errors"
 	"fmt"
-	"log"
 	"time"
 
 	amqp "github.com/rabbitmq/amqp091-go"
+	"github.com/rs/zerolog"
 )
 
 // RabbitMQ клиент
 type Client struct {
+	logger  *zerolog.Logger
 	conn    *amqp.Connection
 	channel *amqp.Channel
 	config  Config
@@ -39,7 +40,7 @@ type Config struct {
 }
 
 // Конструктор нового клиента
-func New(config Config) (*Client, error) {
+func New(config Config, logger *zerolog.Logger) (*Client, error) {
 	client := &Client{config: config}
 
 	if err := client.connect(); err != nil {
@@ -169,7 +170,6 @@ func (c *Client) setup() error {
 	return nil
 }
 
-// TODO! Переделать логи на ошибки или прокинуть логгер
 // Слушатель реконнектов
 func (c *Client) reconnectListener() {
 	for {
@@ -178,12 +178,12 @@ func (c *Client) reconnectListener() {
 			return
 		}
 
-		log.Printf("Connection closed: %v. Reconnecting...", reason)
+		c.logger.Warn().Msgf("Connection closed: %v. Reconnecting...", reason)
 
 		var err error
 		for i := 0; i < c.config.MaxReconnect; i++ {
 			if err = c.connect(); err == nil {
-				log.Println("Reconnected successfully")
+				c.logger.Info().Msg("Reconnected successfully")
 				break
 			}
 
@@ -191,7 +191,7 @@ func (c *Client) reconnectListener() {
 		}
 
 		if err != nil {
-			log.Fatalf("Failed to reconnect after %d attempts", c.config.MaxReconnect)
+			c.logger.Error().Err(err).Msgf("Failed to reconnect after %d attempts", c.config.MaxReconnect)
 		}
 	}
 }
