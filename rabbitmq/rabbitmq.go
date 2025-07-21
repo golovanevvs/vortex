@@ -193,7 +193,7 @@ func (c *Client) reconnectListener() {
 		}
 
 		if err != nil {
-			c.logger.Error().Err(err).Msgf("Failed to reconnect after %d attempts", c.config.MaxReconnect)
+			c.logger.Fatal().Err(err).Msgf("Failed to reconnect after %d attempts", c.config.MaxReconnect)
 			return
 		}
 	}
