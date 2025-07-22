@@ -13,6 +13,7 @@ type Config struct {
 	ServerConfig   serverConfig
 	LoggerConfig   loggerConfig
 	RabbitMQConfig rabbitmq.Config
+	Retry          retry
 }
 
 type serverConfig struct {
@@ -21,6 +22,11 @@ type serverConfig struct {
 
 type loggerConfig struct {
 	LogLevel string
+}
+
+type retry struct {
+	MaxRetrySendAttempts  int
+	RetrySendDelayMinutes int
 }
 
 func New() *Config {
@@ -68,6 +74,9 @@ func (c *Config) Load(pathConfigFile string, pathEnvFile string, envPrefix strin
 	c.RabbitMQConfig.GlobalPrefetch = c.GetBool("rabbitmq.global_prefetch")
 	c.RabbitMQConfig.Mandatory = c.GetBool("rabbitmq.mandatory")
 	c.RabbitMQConfig.Immediate = c.GetBool("rabbitmq.immediate")
+
+	c.Retry.MaxRetrySendAttempts = c.GetInt("retry.max_retry_send_attempts")
+	c.Retry.RetrySendDelayMinutes = c.GetInt("retry.retry_send_delay_minutes")
 
 	return nil
 }

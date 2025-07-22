@@ -49,10 +49,12 @@ func New(cancelFunc context.CancelFunc, config Config, logger *zerolog.Logger) (
 		config: config}
 
 	if err := client.connect(); err != nil {
+		logger.Error().Err(err).Msg("Failed to connect")
 		return nil, err
 	}
 
 	if err := client.setup(); err != nil {
+		logger.Error().Err(err).Msg("Failed to client setup")
 		return nil, err
 	}
 
@@ -265,6 +267,7 @@ func (c *Client) Consume(handler func([]byte) error) error {
 		nil,
 	)
 	if err != nil {
+		c.logger.Error().Err(err).Msg("Failed starts delivering queded messages")
 		return err
 	}
 
@@ -273,7 +276,39 @@ func (c *Client) Consume(handler func([]byte) error) error {
 			if err := handler(msg.Body); err == nil {
 				msg.Ack(false)
 			} else {
-				msg.Nack(false, true)
+				msg.Nack(false, false)
+			}
+		}
+	}()
+
+	return nil
+}
+
+func (c *Client) DelayedConsume(handler func([]byte) error) error {
+	if c.channel == nil || c.config.Queue == "" {
+		return errors.New("channel or queue not configured")
+	}
+
+	msgs, err := c.channel.Consume(
+		c.config.DelayedQueue,
+		"",
+		false,
+		c.config.Exclusive,
+		false,
+		c.config.NoWait,
+		nil,
+	)
+	if err != nil {
+		c.logger.Error().Err(err).Msg("Failed starts delivering queded messages")
+		return err
+	}
+
+	go func() {
+		for msg := range msgs {
+			if err := handler(msg.Body); err == nil {
+				msg.Ack(false)
+			} else {
+				msg.Nack(false, false)
 			}
 		}
 	}()
