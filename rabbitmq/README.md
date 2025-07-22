@@ -4,19 +4,19 @@
 
 ### Docker
 
-Запуск
+Запуск:
 
 ```bash
 docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:4-management
 ```
 
-Остановка
+Остановка:
 
 ```bash
 docker stop rabbitmq
 ```
 
-Для сохранения данных между сессиями
+Для сохранения данных между сессиями:
 
 ```bash
 docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 -v rabbitmq_data:/var/lib/rabbitmq rabbitmq:4-management
@@ -27,6 +27,44 @@ docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 -v rabbitmq_data:/var/
 ### rabbitmq-delayed-message-exchange
 
 [https://github.com/rabbitmq/rabbitmq-delayed-message-exchange](https://github.com/rabbitmq/rabbitmq-delayed-message-exchange)
+
+Скачать:
+
+[https://github.com/rabbitmq/rabbitmq-delayed-message-exchange/releases](https://github.com/rabbitmq/rabbitmq-delayed-message-exchange/releases)
+
+Создать Dockerfile по образцу:
+
+```Dockerfile
+FROM rabbitmq:4-management
+
+COPY rabbitmq_delayed_message_exchange-4.1.0.ez /plugins/
+
+RUN rabbitmq-plugins enable rabbitmq_delayed_message_exchange
+```
+
+Собрать образ:
+
+```bash
+docker build -t custom-rabbitmq-with-delayed .
+```
+
+Запустить контейнер:
+
+```bash
+docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 custom-rabbitmq-with-delayed
+```
+
+Остановка:
+
+```bash
+docker stop rabbitmq
+```
+
+Для сохранения данных между сессиями:
+
+```bash
+docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 -v rabbitmq_data:/var/lib/rabbitmq custom-rabbitmq-with-delayed
+```
 
 ## Использование
 
