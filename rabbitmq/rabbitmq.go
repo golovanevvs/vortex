@@ -224,7 +224,7 @@ func (c *Client) Publish(body []byte, headers amqp.Table) error {
 	)
 }
 
-func (c *Client) PublishDelayed(body []byte, headers amqp.Table, delay time.Duration) error {
+func (c *Client) PublishDelayed(body []byte, delay time.Duration) error {
 	if c.channel == nil {
 		return errors.New("channel not initialized")
 	}
@@ -232,10 +232,7 @@ func (c *Client) PublishDelayed(body []byte, headers amqp.Table, delay time.Dura
 		return errors.New("delayed exchange not configured")
 	}
 
-	// Добавляем заголовок x-delay с указанием задержки в миллисекундах
-	if headers == nil {
-		headers = make(amqp.Table)
-	}
+	headers := make(amqp.Table)
 	headers["x-delay"] = int(delay.Milliseconds())
 
 	return c.channel.Publish(
