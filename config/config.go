@@ -74,6 +74,8 @@ func (c *Config) Load(pathConfigFile string, pathEnvFile string, envPrefix strin
 	c.RabbitMQConfig.GlobalPrefetch = c.GetBool("rabbitmq.global_prefetch")
 	c.RabbitMQConfig.Mandatory = c.GetBool("rabbitmq.mandatory")
 	c.RabbitMQConfig.Immediate = c.GetBool("rabbitmq.immediate")
+	c.RabbitMQConfig.DelayedExchange = c.GetString("rabbitmq.delayed_exchange")
+	c.RabbitMQConfig.DelayedQueue = c.GetString("rabbitmq.delayed_queue")
 
 	c.Retry.MaxRetrySendAttempts = c.GetInt("retry.max_retry_send_attempts")
 	c.Retry.RetrySendDelayMinutes = c.GetInt("retry.retry_send_delay_minutes")
