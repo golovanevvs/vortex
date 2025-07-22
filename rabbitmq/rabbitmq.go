@@ -42,9 +42,9 @@ type Config struct {
 }
 
 // Конструктор нового клиента
-func New(cancel context.CancelFunc, config Config, logger *zerolog.Logger) (*Client, error) {
+func New(cancelFunc context.CancelFunc, config Config, logger *zerolog.Logger) (*Client, error) {
 	client := &Client{
-		cancel: cancel,
+		cancel: cancelFunc,
 		logger: logger.With().Str("component", "RabbitMQ").Logger(),
 		config: config}
 
