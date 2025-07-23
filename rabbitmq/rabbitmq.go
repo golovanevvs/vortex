@@ -10,7 +10,7 @@ import (
 	"github.com/rs/zerolog"
 )
 
-// RabbitMQ клиент
+// RabbitMQ client
 type Client struct {
 	cancel  context.CancelFunc
 	logger  zerolog.Logger
@@ -37,16 +37,19 @@ type Config struct {
 	GlobalPrefetch            bool
 	Mandatory                 bool
 	Immediate                 bool
+	DelayedExcnahge           string
+	DelayedQueue              string
 	DelayedExchangeWithPlugin string
 	DelayedQueueWithPlugin    string
 }
 
-// Конструктор нового клиента
+// New client builder
 func New(cancelFunc context.CancelFunc, config Config, logger *zerolog.Logger) (*Client, error) {
 	client := &Client{
 		cancel: cancelFunc,
 		logger: logger.With().Str("component", "RabbitMQ").Logger(),
-		config: config}
+		config: config,
+	}
 
 	if err := client.connect(); err != nil {
 		logger.Error().Err(err).Msg("Failed to connect")
@@ -63,7 +66,7 @@ func New(cancelFunc context.CancelFunc, config Config, logger *zerolog.Logger) (
 	return client, nil
 }
 
-// Подключение к RabbitMQ
+// Connecting to RabbitMQ
 func (c *Client) connect() error {
 	conn, err := amqp.DialConfig(c.config.URL, amqp.Config{
 		Dial: amqp.DefaultDial(5 * time.Second),
@@ -93,7 +96,7 @@ func (c *Client) connect() error {
 	return nil
 }
 
-// Настройка exchange и queue
+// Setupping exchange and queue
 func (c *Client) setup() error {
 	if c.config.Exchange != "" {
 		if err := c.channel.ExchangeDeclare(
@@ -133,6 +136,10 @@ func (c *Client) setup() error {
 				return fmt.Errorf("failed to bind queue: %w", err)
 			}
 		}
+
+		// delayed
+
+		// rabbitmq-delayed-message-exchange
 
 		if c.config.DelayedExchangeWithPlugin != "" {
 			args := amqp.Table{"x-delayed-type": "direct"}
@@ -177,7 +184,7 @@ func (c *Client) setup() error {
 	return nil
 }
 
-// Слушатель реконнектов
+// Reconnect listener
 func (c *Client) reconnectListener() {
 	for {
 		reason := <-c.conn.NotifyClose(make(chan *amqp.Error))
@@ -205,7 +212,7 @@ func (c *Client) reconnectListener() {
 	}
 }
 
-// Публикация сообщения
+// Publishing
 func (c *Client) Publish(body []byte, headers amqp.Table) error {
 	if c.channel == nil {
 		return errors.New("channel not initialized")
@@ -224,6 +231,7 @@ func (c *Client) Publish(body []byte, headers amqp.Table) error {
 	)
 }
 
+// Publishing delayed with plugin
 func (c *Client) PublishDelayedWithPlugin(body []byte, delay time.Duration) error {
 	if c.channel == nil {
 		return errors.New("channel not initialized")
@@ -248,7 +256,7 @@ func (c *Client) PublishDelayedWithPlugin(body []byte, delay time.Duration) erro
 	)
 }
 
-// Подписка на сообщения
+// Consuming
 func (c *Client) Consume(handler func([]byte) error) error {
 	if c.channel == nil || c.config.Queue == "" {
 		return errors.New("channel or queue not configured")
@@ -281,6 +289,7 @@ func (c *Client) Consume(handler func([]byte) error) error {
 	return nil
 }
 
+// Delayed consuming with plugin
 func (c *Client) DelayedConsumeWithPlugin(handler func([]byte) error) error {
 	if c.channel == nil || c.config.Queue == "" {
 		return errors.New("channel or queue not configured")
@@ -313,7 +322,7 @@ func (c *Client) DelayedConsumeWithPlugin(handler func([]byte) error) error {
 	return nil
 }
 
-// Закрытие соединения
+// Connection closing
 func (c *Client) Close() error {
 	if c.channel != nil {
 		if err := c.channel.Close(); err != nil {
