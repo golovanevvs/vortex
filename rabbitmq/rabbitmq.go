@@ -20,25 +20,25 @@ type Client struct {
 }
 
 type Config struct {
-	URL                   string
-	ReconnectDelaySeconds int
-	MaxReconnect          int
-	Exchange              string
-	ExchangeType          string
-	Queue                 string
-	RoutingKey            string
-	Durable               bool
-	AutoDelete            bool
-	Internal              bool
-	Exclusive             bool
-	NoWait                bool
-	PrefetchCount         int
-	PrefetchSize          int
-	GlobalPrefetch        bool
-	Mandatory             bool
-	Immediate             bool
-	DelayedExchange       string
-	DelayedQueue          string
+	URL                       string
+	ReconnectDelaySeconds     int
+	MaxReconnect              int
+	Exchange                  string
+	ExchangeType              string
+	Queue                     string
+	RoutingKey                string
+	Durable                   bool
+	AutoDelete                bool
+	Internal                  bool
+	Exclusive                 bool
+	NoWait                    bool
+	PrefetchCount             int
+	PrefetchSize              int
+	GlobalPrefetch            bool
+	Mandatory                 bool
+	Immediate                 bool
+	DelayedExchangeWithPlugin string
+	DelayedQueueWithPlugin    string
 }
 
 // Конструктор нового клиента
@@ -134,10 +134,10 @@ func (c *Client) setup() error {
 			}
 		}
 
-		if c.config.DelayedExchange != "" {
+		if c.config.DelayedExchangeWithPlugin != "" {
 			args := amqp.Table{"x-delayed-type": "direct"}
 			if err := c.channel.ExchangeDeclare(
-				c.config.DelayedExchange,
+				c.config.DelayedExchangeWithPlugin,
 				"x-delayed-message",
 				c.config.Durable,
 				c.config.AutoDelete,
@@ -148,9 +148,9 @@ func (c *Client) setup() error {
 				return fmt.Errorf("failed to declare delayed exchange: %w", err)
 			}
 
-			if c.config.DelayedQueue != "" {
+			if c.config.DelayedQueueWithPlugin != "" {
 				_, err := c.channel.QueueDeclare(
-					c.config.DelayedQueue,
+					c.config.DelayedQueueWithPlugin,
 					c.config.Durable,
 					c.config.AutoDelete,
 					c.config.Exclusive,
@@ -162,9 +162,9 @@ func (c *Client) setup() error {
 				}
 
 				if err := c.channel.QueueBind(
-					c.config.DelayedQueue,
+					c.config.DelayedQueueWithPlugin,
 					c.config.RoutingKey,
-					c.config.DelayedExchange,
+					c.config.DelayedExchangeWithPlugin,
 					c.config.NoWait,
 					nil,
 				); err != nil {
@@ -228,7 +228,7 @@ func (c *Client) PublishDelayedWithPlugin(body []byte, delay time.Duration) erro
 	if c.channel == nil {
 		return errors.New("channel not initialized")
 	}
-	if c.config.DelayedExchange == "" {
+	if c.config.DelayedExchangeWithPlugin == "" {
 		return errors.New("delayed exchange not configured")
 	}
 
@@ -236,7 +236,7 @@ func (c *Client) PublishDelayedWithPlugin(body []byte, delay time.Duration) erro
 	headers["x-delay"] = int(delay.Milliseconds())
 
 	return c.channel.Publish(
-		c.config.DelayedExchange,
+		c.config.DelayedExchangeWithPlugin,
 		c.config.RoutingKey,
 		c.config.Mandatory,
 		c.config.Immediate,
@@ -287,7 +287,7 @@ func (c *Client) DelayedConsumeWithPlugin(handler func([]byte) error) error {
 	}
 
 	msgs, err := c.channel.Consume(
-		c.config.DelayedQueue,
+		c.config.DelayedQueueWithPlugin,
 		"",
 		false,
 		c.config.Exclusive,
