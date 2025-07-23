@@ -224,7 +224,7 @@ func (c *Client) Publish(body []byte, headers amqp.Table) error {
 	)
 }
 
-func (c *Client) PublishDelayed(body []byte, delay time.Duration) error {
+func (c *Client) PublishDelayedWithPlugin(body []byte, delay time.Duration) error {
 	if c.channel == nil {
 		return errors.New("channel not initialized")
 	}
@@ -281,7 +281,7 @@ func (c *Client) Consume(handler func([]byte) error) error {
 	return nil
 }
 
-func (c *Client) DelayedConsume(handler func([]byte) error) error {
+func (c *Client) DelayedConsumeWithPlugin(handler func([]byte) error) error {
 	if c.channel == nil || c.config.Queue == "" {
 		return errors.New("channel or queue not configured")
 	}
