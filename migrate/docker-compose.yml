@@ -1,0 +1,14 @@
+services:
+  migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MIGRATE_VERSION: v4.19.0
+    volumes:
+      - ../../resources/migrations:/migrations
+    entrypoint: [
+      "migrate",
+      "-path", "/migrations",
+      "-database", "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_MASTER_PORT}/${POSTGRES_DB}?sslmode=disable"
+    ]

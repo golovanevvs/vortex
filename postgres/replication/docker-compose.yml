@@ -1,0 +1,89 @@
+name: ${POSTGRES_REPLICATION_PROJECT_NAME}
+services:
+  postgres-master:
+    image: postgres:latest
+    container_name: ${POSTGRES_MASTER_CONTAINER}
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
+    ports:
+      - "${POSTGRES_MASTER_PORT}:5432"
+    volumes:
+      - master-data:/var/lib/postgresql/data
+      - ./master-init.sql:/docker-entrypoint-initdb.d/01-replication.sql
+    command: >
+      postgres
+      -c wal_level=replica
+      -c max_wal_senders=10
+      -c max_replication_slots=10
+      -c hot_standby=on
+      -c archive_mode=on
+      -c archive_command=/bin/true
+    networks:
+      - network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  postgres-slave-1:
+    image: postgres:latest
+    container_name: ${POSTGRES_SLAVE1_CONTAINER}
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "${POSTGRES_SLAVE1_PORT}:5432"
+    volumes:
+      - slave-1-data:/var/lib/postgresql/data
+    command: >
+      postgres
+      -c hot_standby=on
+      -c max_standby_streaming_delay=30s
+      -c max_standby_archive_delay=30s
+      -c application_name=slave1
+    depends_on:
+      postgres-master:
+        condition: service_healthy
+    networks:
+      - network
+
+  postgres-slave-2:
+    image: postgres:latest
+    container_name: ${POSTGRES_SLAVE2_CONTAINER}
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "${POSTGRES_SLAVE2_PORT}:5432"
+    volumes:
+      - slave-2-data:/var/lib/postgresql/data
+    command: >
+      postgres
+      -c hot_standby=on
+      -c max_standby_streaming_delay=30s
+      -c max_standby_archive_delay=30s
+      -c application_name=slave2
+    depends_on:
+      postgres-master:
+        condition: service_healthy
+    networks:
+      - network
+    
+volumes:
+  master-data:
+    driver: local
+  slave-1-data:
+    driver: local
+  slave-2-data:
+    driver: local
+
+networks:
+  network:
+    driver: bridge

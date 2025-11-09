@@ -1,0 +1,57 @@
+services:
+  pgauto-monitor:
+    image: citusdata/pg_auto_failover:latest
+    container_name: pgauto-monitor
+    environment:
+      PG_AUTOCTL_DEBUG: 1
+    ports:
+      - "${PGAUTO_MONITOR_PORT}:3000"
+    command: >
+      pg_autoctl create monitor --pgdata /var/lib/postgresql/monitor --pgport 5432 --hostname pgauto-monitor --ssl-self-signed --auth trust --run
+    networks:
+      - postgres-replication
+    volumes:
+      - pgauto-monitor-data:/var/lib/postgresql/monitor
+    user: root
+
+  pgauto-primary:
+    image: citusdata/pg_auto_failover:latest
+    container_name: pgauto-primary
+    environment:
+      PG_AUTOCTL_DEBUG: 1
+    depends_on:
+      - pgauto-monitor
+    command: >
+      sh -c "sleep 5 && pg_autoctl create postgres --pgdata /var/lib/postgresql/primary --pgport 5432 --name pgauto-primary --hostname pgauto-primary --monitor postgres://autoctl_node@pgauto-monitor:5432/pg_auto_failover --ssl-self-signed --auth trust --run"
+    networks:
+      - postgres-replication
+    volumes:
+      - pgauto-primary-data:/var/lib/postgresql/primary
+    user: root
+
+  pgauto-secondary:
+    image: citusdata/pg_auto_failover:latest
+    container_name: pgauto-secondary
+    environment:
+      PG_AUTOCTL_DEBUG: 1
+    depends_on:
+      - pgauto-monitor
+    command: >
+      sh -c "sleep 10 && pg_autoctl create postgres --pgdata /var/lib/postgresql/secondary --pgport 5432 --name pgauto-secondary --hostname pgauto-secondary --monitor postgres://autoctl_node@pgauto-monitor:5432/pg_auto_failover --ssl-self-signed --auth trust --run"
+    networks:
+      - postgres-replication
+    volumes:
+      - pgauto-secondary-data:/var/lib/postgresql/secondary
+    user: root
+
+volumes:
+  pgauto-monitor-data:
+    driver: local
+  pgauto-primary-data:
+    driver: local
+  pgauto-secondary-data:
+    driver: local
+
+networks:
+  postgres-replication:
+    driver: bridge

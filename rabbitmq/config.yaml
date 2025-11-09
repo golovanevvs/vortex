@@ -1,0 +1,7 @@
+rabbitmq:
+  exchange: notice_exchange
+  exchange_type: direct
+  queue: sheduled_notice_queue
+  routing_key: sheduled_notice_routing_key
+  dlx: notice_dlx
+  dlq: notice_dlq

@@ -1,0 +1,12 @@
+services:
+  postgres-master:
+    command: >
+      postgres
+      -c wal_level=replica
+      -c max_wal_senders=10
+      -c synchronous_commit=on
+      -c synchronous_standby_names='FIRST 2 (slave1, slave2)'
+      -c max_replication_slots=10
+      -c hot_standby=on
+      -c archive_mode=on
+      -c archive_command=/bin/true

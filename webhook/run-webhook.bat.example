@@ -1,0 +1,40 @@
+@echo off
+title Webhook Server - delayed-notifier_main-server
+echo ========================================
+echo    Webhook Server for CI/CD Deploy
+echo ========================================
+echo.
+
+cd /d "C:\Golovanev\Dev\SDK\webhook"
+
+if not exist "webhook.exe" (
+    echo ERROR: webhook.exe not found in current directory
+    echo Current directory: %CD%
+    echo Download from: https://github.com/adnanh/webhook/releases
+    pause
+    exit /b 1
+)
+
+if not exist "hooks.json" (
+    echo ERROR: hooks.json not found in current directory
+    echo Current directory: %CD%
+    echo Create hooks.json configuration file first
+    pause
+    exit /b 1
+)
+
+echo Starting webhook server with configuration:
+echo - Config file: %CD%\hooks.json
+echo - Hot reload: enabled
+echo - Verbose logging: enabled
+echo.
+echo Webhook will be available at:
+echo http://your-pc-ip:9000/hooks/delayed-notifier-deploy
+echo.
+echo Press Ctrl+C to stop the server
+echo ========================================
+echo.
+
+webhook.exe -hooks hooks.json -verbose -hotreload
+
+pause

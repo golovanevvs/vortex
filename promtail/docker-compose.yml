@@ -1,0 +1,19 @@
+services:
+  promtail:
+    image: grafana/promtail:latest
+    container_name: ${PROMTAIL_CONTAINER}
+    volumes:
+      - ./config.yaml:/etc/promtail/config.yaml:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - promtail_data:/var/lib/promtail
+ 
+    command: -config.file=/etc/promtail/config.yaml
+    networks:
+      - proxy
+networks:
+  proxy:
+    external: true
+ 
+volumes:
+  promtail_data:

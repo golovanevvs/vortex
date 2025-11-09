@@ -1,0 +1,30 @@
+@echo off
+echo ========================================
+echo    Starting Delayed Notifier Deployment
+echo    Time: %date% %time%
+echo ========================================
+echo.
+
+echo Changing to project directory...
+cd /d "C:\Golovanev\Dev\Projects\wbtech-school-go\L3\L3.1\delayed-notifier\delayed-notifier_main-server\resources\deploy"
+
+echo Stopping existing containers...
+docker compose down
+
+echo Pulling latest image...
+docker compose pull
+
+echo Starting new containers...
+docker compose -p delayed-notifier_main-server up -d
+
+echo.
+echo Checking container status...
+docker ps --filter "name=delayed-notifier_main-server"
+
+echo.
+echo ========================================
+echo    Deployment completed successfully!
+echo ========================================
+echo.
+
+ping -n 3 127.0.0.1 > nul

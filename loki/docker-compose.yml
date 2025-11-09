@@ -1,0 +1,17 @@
+services:
+  loki:
+    image: grafana/loki:latest
+    container_name: ${LOKI_CONTAINER}
+    command: -config.file=/etc/loki/config.yaml
+    volumes:
+      - ./config.yaml:/etc/loki/config.yaml:ro
+      - loki_data:/loki
+    networks:
+      - proxy
+      
+networks:
+  proxy:
+    external: true
+
+volumes:
+  loki_data:

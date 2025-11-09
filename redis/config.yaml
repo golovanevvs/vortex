@@ -1,0 +1,3 @@
+redis:
+  db: 0
+  ttl: 0s

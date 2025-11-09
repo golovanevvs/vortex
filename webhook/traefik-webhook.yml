@@ -1,0 +1,13 @@
+http:
+  routers:
+    webhook-host:
+      rule: "Host(`virtually-treasured-iguana.cloudpub.ru`) && PathPrefix(`/webhook/deploy`)"
+      entryPoints:
+        - "web"
+      service: webhook-host
+
+  services:
+    webhook-host:
+      loadBalancer:
+        servers:
+          - url: "http://172.17.32.1:9000"
