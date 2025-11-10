@@ -5,17 +5,13 @@ services:
     environment:
       - GF_SECURITY_ADMIN_USER=${GRAFANA_USER}
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
-      - GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s/grafana/
+      - GF_SERVER_ROOT_URL=https://incompletely-elemental-moonfish.cloudpub.ru/grafana/
       - GF_SERVER_SERVE_FROM_SUB_PATH=true
+      - GF_SERVER_DOMAIN=incompletely-elemental-moonfish.cloudpub.ru
     volumes:
       - grafana_data:/var/lib/grafana
     networks:
       - proxy
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.${GRAFANA_CONTAINER}.rule=Host(`${PUBLIC_HOST_DOCKER}`) && PathPrefix(`/${GRAFANA_CONTAINER}`)"
-      - "traefik.http.routers.${GRAFANA_CONTAINER}.entrypoints=web"
-      - "traefik.http.services.${GRAFANA_CONTAINER}.loadbalancer.server.port=3000"
 
 networks:
   proxy:

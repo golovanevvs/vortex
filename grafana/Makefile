@@ -1,10 +1,10 @@
 MAKEFLAGS += --no-print-directory
 
-PROJECT_DIR := $(abspath ../..)
-
-ENV_FILES := .env ../../../../../.env
-$(foreach file,$(ENV_FILES), \
-  $(if $(wildcard $(file)), $(eval include $(file))) \
+ENV_FILES := .env ../.env
+$(foreach file,$(ENV_FILES),\
+    $(if $(wildcard $(file)),\
+        $(eval include $(file))\
+    )\
 )
 export
 
@@ -55,7 +55,7 @@ exec:
 # GRAFANA
 # ========================
 
-# GRAFANA = providers/grafana
+# GRAFANA = grafana
 
 # grafana-up:
 # 	$(MAKE_CMD) -C $(GRAFANA) up

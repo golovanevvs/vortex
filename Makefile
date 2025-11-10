@@ -335,6 +335,17 @@ cloudpub-webhook-exec:
 	$(MAKE_CMD) -C $(CLOUDPUB-WEBHOOK) exec
 
 # ========================
+# WEBHOOK
+# ========================
+
+WEBHOOK = webhook
+
+.PHONY: webhook-up
+
+webhook-up:
+	$(MAKE_CMD) -C $(WEBHOOK) up
+
+# ========================
 # TRAEFIK
 # ========================
 

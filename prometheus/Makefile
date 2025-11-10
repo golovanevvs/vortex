@@ -1,7 +1,5 @@
 MAKEFLAGS += --no-print-directory
 
-PROJECT_DIR := $(abspath ../..)
-
 ENV_FILES := .env
 $(foreach file,$(ENV_FILES), \
   $(if $(wildcard $(file)), $(eval include $(file))) \
@@ -33,7 +31,10 @@ stop:
 	docker compose -p $(PROJECT_NAME) stop
 	@echo "${NAME} stopped."
 
-restart: stop up
+restart:
+	@echo "Restarting ${NAME}..."
+	docker compose restart $(SERVICE_NAME)
+	@echo "${NAME} restarted."
 
 rm:
 	@echo "Removing ${NAME} (keeping data)..."
