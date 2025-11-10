@@ -14,14 +14,19 @@ endif
 
 .PHONY: up logs stop restart rm down ps exec
 
-NAME = ${REDIS_CONTAINER}
-PROJECT_NAME = ${REDIS_CONTAINER}
-SERVICE_NAME = ${REDIS_CONTAINER}
+NAME = ${NGINX_CONTAINER}
+PROJECT_NAME = ${NGINX_CONTAINER}
+SERVICE_NAME = ${NGINX_CONTAINER}
 
 up:
 	@echo "Starting ${NAME}..."
 	docker compose -p $(PROJECT_NAME) up -d
 	@echo "${NAME} is up and running."
+
+reload:
+	@echo "Reloading ${NAME}..."
+	docker compose -p $(PROJECT_NAME) exec $(SERVICE_NAME) nginx -s reload
+	@echo "${NAME} reloaded."
 
 logs:
 	docker compose -p $(PROJECT_NAME) logs -f
@@ -49,28 +54,29 @@ ps:
 exec:
 	docker compose -p $(PROJECT_NAME) exec $(SERVICE_NAME) sh
 
-
 # ========================
-# REDIS
+# NGINX
 # ========================
 
-# REDIS = redis
+# NGINX = nginx
 
-# .PHONY: redis-up redis-logs redis-stop redis-restart redis-rm redis-down redis-ps redis-exec
+# .PHONY: nginx-up nginx-reload nginx-logs nginx-stop nginx-restart nginx-rm nginx-down nginx-ps nginx-exec
 
-# redis-up:
-# 	$(MAKE_CMD) -C $(REDIS) up
-# redis-logs:
-# 	$(MAKE_CMD) -C $(REDIS) logs
-# redis-stop:
-# 	$(MAKE_CMD) -C $(REDIS) stop
-# redis-restart:
-# 	$(MAKE_CMD) -C $(REDIS) restart
-# redis-rm:
-# 	$(MAKE_CMD) -C $(REDIS) rm
-# redis-down:
-# 	$(MAKE_CMD) -C $(REDIS) down
-# redis-ps:
-# 	$(MAKE_CMD) -C $(REDIS) ps
-# redis-exec:
-# 	$(MAKE_CMD) -C $(REDIS) exec
+# nginx-up:
+# 	$(MAKE_CMD) -C $(NGINX) up
+# nginx-reload:
+# 	$(MAKE_CMD) -C $(NGINX) reload
+# nginx-logs:
+# 	$(MAKE_CMD) -C $(NGINX) logs
+# nginx-stop:
+# 	$(MAKE_CMD) -C $(NGINX) stop
+# nginx-restart:
+# 	$(MAKE_CMD) -C $(NGINX) restart
+# nginx-rm:
+# 	$(MAKE_CMD) -C $(NGINX) rm
+# nginx-down:
+# 	$(MAKE_CMD) -C $(NGINX) down
+# nginx-ps:
+# 	$(MAKE_CMD) -C $(NGINX) ps
+# nginx-exec:
+# 	$(MAKE_CMD) -C $(NGINX) exec

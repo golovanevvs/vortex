@@ -15,10 +15,37 @@ else
 endif
 
 # ========================
+# NGINX
+# ========================
+
+NGINX = nginx
+
+.PHONY: nginx-up nginx-reload nginx-logs nginx-stop nginx-restart nginx-rm nginx-down nginx-ps nginx-exec
+
+nginx-up:
+	$(MAKE_CMD) -C $(NGINX) up
+nginx-reload:
+	$(MAKE_CMD) -C $(NGINX) reload
+nginx-logs:
+	$(MAKE_CMD) -C $(NGINX) logs
+nginx-stop:
+	$(MAKE_CMD) -C $(NGINX) stop
+nginx-restart:
+	$(MAKE_CMD) -C $(NGINX) restart
+nginx-rm:
+	$(MAKE_CMD) -C $(NGINX) rm
+nginx-down:
+	$(MAKE_CMD) -C $(NGINX) down
+nginx-ps:
+	$(MAKE_CMD) -C $(NGINX) ps
+nginx-exec:
+	$(MAKE_CMD) -C $(NGINX) exec
+
+# ========================
 # MIGRATE
 # ========================
 
-MIGRATE = providers/migrate
+MIGRATE = migrate
 
 migrate-create:
 	$(MAKE_CMD) -C $(MIGRATE) create
@@ -32,7 +59,7 @@ migrate-down:
 # POSTGRES
 # ========================
 
-POSTGRES = providers/postgres
+POSTGRES = postgres
 
 # Default target
 postgres-help:
@@ -117,7 +144,7 @@ postgres-clean-all:
 # RABBITMQ
 # ========================
 
-RABBITMQ = providers/rabbitmq
+RABBITMQ = rabbitmq
 
 .PHONY: rabbitmq-up rabbitmq-logs rabbitmq-stop rabbitmq-restart rabbitmq-rm rabbitmq-down rabbitmq-ps rabbitmq-exec
 
@@ -142,7 +169,7 @@ rabbitmq-exec:
 # REDIS
 # ========================
 
-REDIS = providers/redis
+REDIS = redis
 
 .PHONY: redis-up redis-logs redis-stop redis-restart redis-rm redis-down redis-ps redis-exec
 
@@ -164,10 +191,35 @@ redis-exec:
 	$(MAKE_CMD) -C $(REDIS) exec
 
 # ========================
+# REDIS_INSIGHT
+# ========================
+
+REDIS_INSIGHT = redisinsight
+
+.PHONY: redis-insight-up redis-insight-logs redis-insight-stop redis-insight-restart redis-insight-rm redis-insight-down redis-insight-ps redis-insight-exec
+
+redis-insight-up:
+	$(MAKE_CMD) -C $(REDIS_INSIGHT) up
+redis-insight-logs:
+	$(MAKE_CMD) -C $(REDIS_INSIGHT) logs
+redis-insight-stop:
+	$(MAKE_CMD) -C $(REDIS_INSIGHT) stop
+redis-insight-restart:
+	$(MAKE_CMD) -C $(REDIS_INSIGHT) restart
+redis-insight-rm:
+	$(MAKE_CMD) -C $(REDIS_INSIGHT) rm
+redis-insight-down:
+	$(MAKE_CMD) -C $(REDIS_INSIGHT) down
+redis-insight-ps:
+	$(MAKE_CMD) -C $(REDIS_INSIGHT) ps
+redis-insight-exec:
+	$(MAKE_CMD) -C $(REDIS_INSIGHT) exec
+
+# ========================
 # PROMTAIL
 # ========================
 
-PROMTAIL = providers/promtail
+PROMTAIL = promtail
 
 promtail-up:
 	$(MAKE_CMD) -C $(PROMTAIL) up
@@ -190,7 +242,7 @@ promtail-exec:
 # LOKI
 # ========================
 
-LOKI = providers/loki
+LOKI = loki
 
 loki-up:
 	$(MAKE_CMD) -C $(LOKI) up
@@ -213,7 +265,7 @@ loki-exec:
 # GRAFANA
 # ========================
 
-GRAFANA = providers/grafana
+GRAFANA = grafana
 
 grafana-up:
 	$(MAKE_CMD) -C $(GRAFANA) up
@@ -236,7 +288,7 @@ grafana-exec:
 # CLOUDPUB
 # ========================
 
-CLOUDPUB = providers/cloudpub
+CLOUDPUB = cloudpub
 
 .PHONY: cloudpub-up cloudpub-logs cloudpub-stop cloudpub-restart cloudpub-rm cloudpub-down cloudpub-ps cloudpub-exec
 
@@ -261,7 +313,7 @@ cloudpub-exec:
 # CLOUDPUB-WEBHOOK
 # ========================
 
-CLOUDPUB-WEBHOOK = providers/cloudpub-webhook
+CLOUDPUB-WEBHOOK = cloudpub-webhook
 
 .PHONY: cloudpub-webhook-up cloudpub-webhook-logs cloudpub-webhook-stop cloudpub-webhook-restart cloudpub-webhook-rm cloudpub-webhook-down cloudpub-webhook-ps cloudpub-webhook-exec
 
@@ -286,7 +338,7 @@ cloudpub-webhook-exec:
 # TRAEFIK
 # ========================
 
-TRAEFIK = providers/traefik
+TRAEFIK = traefik
 
 .PHONY: traefik-up traefik-logs traefik-stop traefik-restart traefik-rm traefik-down traefik-ps traefik-exec
 
@@ -311,7 +363,7 @@ traefik-exec:
 # PROMETHEUS
 # ========================
 
-PROMETHEUS = providers/prometheus
+PROMETHEUS = prometheus
 
 .PHONY: prometheus-up prometheus-logs prometheus-stop prometheus-restart prometheus-rm prometheus-down prometheus-ps prometheus-exec
 

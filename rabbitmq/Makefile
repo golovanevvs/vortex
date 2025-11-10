@@ -1,7 +1,5 @@
 MAKEFLAGS += --no-print-directory
 
-PROJECT_DIR := $(abspath ../..)
-
 ENV_FILE ?= .env
 ifneq (,$(wildcard $(ENV_FILE)))
 include $(ENV_FILE)
@@ -55,7 +53,7 @@ exec:
 # RABBITMQ
 # ========================
 
-# RABBITMQ = providers/rabbitmq
+# RABBITMQ = rabbitmq
 
 # .PHONY: rabbitmq-up rabbitmq-logs rabbitmq-stop rabbitmq-restart rabbitmq-rm rabbitmq-down rabbitmq-ps rabbitmq-exec
 

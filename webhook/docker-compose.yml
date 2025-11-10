@@ -9,7 +9,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /c/Golovanev/Dev/Projects/wbtech-school-go/L3/L3.1/delayed-notifier/delayed-notifier_main-server/resources/deploy:/etc/webhook/deploy:ro
     ports:
-      - "9000:9000"
+      - "${WEBHOOK_PORT_EXT}:9000"
     networks:
       - proxy
     labels:

@@ -1,0 +1,15 @@
+services:
+  redis-insight:
+    image: redislabs/redisinsight:latest
+    container_name: ${REDIS_INSIGHT_CONTAINER}
+    ports:
+      - "${REDIS_INSIGHT_PORT_EXT}:5540"
+    networks:
+      - proxy
+    environment:
+      - RIHOST=0.0.0.0
+      - RIPORT=5540
+    
+networks:
+  proxy:
+    external: true

@@ -1,7 +1,5 @@
 MAKEFLAGS += --no-print-directory
 
-PROJECT_DIR := $(abspath ../..)
-
 ENV_FILE ?= .env
 ifneq (,$(wildcard $(ENV_FILE)))
 include $(ENV_FILE)
@@ -55,7 +53,7 @@ exec:
 # TRAEFIK
 # ========================
 
-# TRAEFIK = providers/traefik
+# TRAEFIK = traefik
 
 # .PHONY: traefik-up traefik-logs traefik-stop traefik-restart traefik-rm traefik-down traefik-ps traefik-exec
 

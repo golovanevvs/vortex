@@ -4,7 +4,7 @@ services:
     container_name: ${CLOUDPUB_CONTAINER}
     environment:
       - TOKEN=${CLOUDPUB_TOKEN}
-      - HTTP=host.docker.internal:${TRAEFIK_HTTP_PORT_EXT},host.docker.internal:${TRAEFIK_DASHBOARD_PORT_EXT}
+      - HTTP=host.docker.internal:${TRAEFIK_HTTP_PORT_EXT},host.docker.internal:${TRAEFIK_DASHBOARD_PORT_EXT}, host.docker.internal:${WEBHOOK_PORT_EXT}
     command: run
     volumes:
       - cloudpub-config:/home/cloudpub

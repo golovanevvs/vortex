@@ -3,9 +3,11 @@ services:
     image: redis:latest
     container_name: ${REDIS_CONTAINER}
     ports:
-      - "${REDIS_PORT}:6379"
+      - "${REDIS_PORT_EXT}:6379"
     volumes:
       - redis_data:/data
+    networks:
+      - proxy
     environment:
       - REDIS_PASSWORD=${REDIS_PASSWORD}
     command: >
@@ -26,3 +28,7 @@ services:
 
 volumes:
   redis_data:
+
+networks:
+  proxy:
+    external: true

@@ -14,9 +14,9 @@ endif
 
 .PHONY: up logs stop restart rm down ps exec
 
-NAME = ${REDIS_CONTAINER}
-PROJECT_NAME = ${REDIS_CONTAINER}
-SERVICE_NAME = ${REDIS_CONTAINER}
+NAME = ${REDIS_INSIGHT_CONTAINER}
+PROJECT_NAME = ${REDIS_INSIGHT_CONTAINER}
+SERVICE_NAME = ${REDIS_INSIGHT_CONTAINER}
 
 up:
 	@echo "Starting ${NAME}..."
@@ -51,26 +51,26 @@ exec:
 
 
 # ========================
-# REDIS
+# REDIS_INSIGHT
 # ========================
 
-# REDIS = redis
+# REDIS_INSIGHT = redisinsight
 
-# .PHONY: redis-up redis-logs redis-stop redis-restart redis-rm redis-down redis-ps redis-exec
+# .PHONY: redis-insight-up redis-insight-logs redis-insight-stop redis-insight-restart redis-insight-rm redis-insight-down redis-insight-ps redis-insight-exec
 
-# redis-up:
-# 	$(MAKE_CMD) -C $(REDIS) up
-# redis-logs:
-# 	$(MAKE_CMD) -C $(REDIS) logs
-# redis-stop:
-# 	$(MAKE_CMD) -C $(REDIS) stop
-# redis-restart:
-# 	$(MAKE_CMD) -C $(REDIS) restart
-# redis-rm:
-# 	$(MAKE_CMD) -C $(REDIS) rm
-# redis-down:
-# 	$(MAKE_CMD) -C $(REDIS) down
-# redis-ps:
-# 	$(MAKE_CMD) -C $(REDIS) ps
-# redis-exec:
-# 	$(MAKE_CMD) -C $(REDIS) exec
+# redis-insight-up:
+# 	$(MAKE_CMD) -C $(REDIS_INSIGHT) up
+# redis-insight-logs:
+# 	$(MAKE_CMD) -C $(REDIS_INSIGHT) logs
+# redis-insight-stop:
+# 	$(MAKE_CMD) -C $(REDIS_INSIGHT) stop
+# redis-insight-restart:
+# 	$(MAKE_CMD) -C $(REDIS_INSIGHT) restart
+# redis-insight-rm:
+# 	$(MAKE_CMD) -C $(REDIS_INSIGHT) rm
+# redis-insight-down:
+# 	$(MAKE_CMD) -C $(REDIS_INSIGHT) down
+# redis-insight-ps:
+# 	$(MAKE_CMD) -C $(REDIS_INSIGHT) ps
+# redis-insight-exec:
+# 	$(MAKE_CMD) -C $(REDIS_INSIGHT) exec
