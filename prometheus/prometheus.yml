@@ -5,7 +5,7 @@ global:
 scrape_configs:
   - job_name: 'delayed-notifier'
     static_configs:
-      - targets: ['app:7777']
+      - targets: ['delayed-notifier_main-server:7777']
     metrics_path: /metrics
 
   - job_name: 'node'
