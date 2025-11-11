@@ -4,7 +4,7 @@ NAME = Webhook
 
 up:
 	@echo "Starting ${NAME}..."
-	cmd /C a.bat
+	start "Webhook Server" cmd /k run-webhook.bat
 	@echo "${NAME} is up and running."
 
 # ========================
