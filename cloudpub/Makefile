@@ -1,6 +1,6 @@
 MAKEFLAGS += --no-print-directory
 
-ENV_FILES ?= .env ../traefik/.env ../webhook/.env
+ENV_FILES ?= .env ../nginx/.env ../webhook/.env
 $(foreach file,$(ENV_FILES),\
     $(if $(wildcard $(file)),\
         $(eval include $(file))\
