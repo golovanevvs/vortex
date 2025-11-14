@@ -61,84 +61,34 @@ migrate-down:
 
 POSTGRES = postgres
 
-# Default target
-postgres-help:
-	$(MAKE_CMD) -C $(POSTGRES) help
-# Basic Cluster Operations
+.PHONY: postgres-up postgres-logs postgres-stop postgres-restart postgres-rm postgres-down postgres-ps postgres-exec postgres-create-db postgres-list-db postgres-list-tables postgres-show-table postgres-drop-db
+
 postgres-up:
 	$(MAKE_CMD) -C $(POSTGRES) up
-postgres-up-async:
-	$(MAKE_CMD) -C $(POSTGRES) up-async
-postgres-up-sync-all:
-	$(MAKE_CMD) -C $(POSTGRES) up-sync-all
-postgres-up-sync-one:
-	$(MAKE_CMD) -C $(POSTGRES) up-sync-one
-postgres-down:
-	$(MAKE_CMD) -C $(POSTGRES) down
-postgres-restart:
-	$(MAKE_CMD) -C $(POSTGRES) restart
-postgres-status:
-	$(MAKE_CMD) -C $(POSTGRES) status
-postgres-status-sync:
-	$(MAKE_CMD) -C $(POSTGRES) status-sync
 postgres-logs:
 	$(MAKE_CMD) -C $(POSTGRES) logs
-postgres-setup:
-	$(MAKE_CMD) -C $(POSTGRES) setup
-postgres-check:
-	$(MAKE_CMD) -C $(POSTGRES) check
-postgres-clean:
-	$(MAKE_CMD) -C $(POSTGRES) clean
-postgres-purge:
-	$(MAKE_CMD) -C $(POSTGRES) purge
-# Replication Mode Management
-postgres-mode-async:
-	$(MAKE_CMD) -C $(POSTGRES) mode-async
-postgres-mode-sync-all:
-	$(MAKE_CMD) -C $(POSTGRES) mode-sync-all
-postgres-mode-sync-one:
-	$(MAKE_CMD) -C $(POSTGRES) mode-sync-one
-postgres-mode-status:
-	$(MAKE_CMD) -C $(POSTGRES) mode-status
-# Testing and Monitoring
-postgres-test:
-	$(MAKE_CMD) -C $(POSTGRES) test
-postgres-backup:
-	$(MAKE_CMD) -C $(POSTGRES) backup
-postgres-monitor:
-	$(MAKE_CMD) -C $(POSTGRES) monitor
-postgres-log-cont:
-	$(MAKE_CMD) -C $(POSTGRES) log-cont
+postgres-stop:
+	$(MAKE_CMD) -C $(POSTGRES) stop
+postgres-restart:
+	$(MAKE_CMD) -C $(POSTGRES) restart
+postgres-rm:
+	$(MAKE_CMD) -C $(POSTGRES) rm
+postgres-down:
+	$(MAKE_CMD) -C $(POSTGRES) down
+postgres-ps:
+	$(MAKE_CMD) -C $(POSTGRES) ps
+postgres-exec:
+	$(MAKE_CMD) -C $(POSTGRES) exec
+postgres-create-db:
+	$(MAKE_CMD) -C $(POSTGRES) create-db DB="$(DB)"
 postgres-list-db:
 	$(MAKE_CMD) -C $(POSTGRES) list-db
 postgres-list-tables:
-	$(MAKE_CMD) -C $(POSTGRES) list-tables
+	$(MAKE_CMD) -C $(POSTGRES) list-tables DB="$(DB)"
 postgres-show-table:
-	$(MAKE_CMD) -C $(POSTGRES) show-table
-# Emergency Operations
-postgres-promote-slave1:
-	$(MAKE_CMD) -C $(POSTGRES) promote-slave1
-postgres-promote-slave2:
-	$(MAKE_CMD) -C $(POSTGRES) promote-slave2
-postgres-check-master:
-	$(MAKE_CMD) -C $(POSTGRES) check-master
-postgres-check-lag:
-	$(MAKE_CMD) -C $(POSTGRES) check-lag
-# Auto Failover
-postgres-pgauto-up:
-	$(MAKE_CMD) -C $(POSTGRES) pgauto-up
-postgres-pgauto-down:
-	$(MAKE_CMD) -C $(POSTGRES) pgauto-down
-postgres-pgauto-status:
-	$(MAKE_CMD) -C $(POSTGRES) pgauto-status
-postgres-pgauto-status-sync:
-	$(MAKE_CMD) -C $(POSTGRES) pgauto-status-sync
-postgres-pgauto-monitor:
-	$(MAKE_CMD) -C $(POSTGRES) pgauto-monitor
-postgres-pgauto-purge:
-	$(MAKE_CMD) -C $(POSTGRES) pgauto-purge
-postgres-clean-all:
-	$(MAKE_CMD) -C $(POSTGRES) clean-all
+	$(MAKE_CMD) -C $(POSTGRES) show-table DB="$(DB)" TABLE="$(TABLE)"
+postgres-drop-db:
+	$(MAKE_CMD) -C $(POSTGRES) drop-db DB="$(DB)"
 
 # ========================
 # RABBITMQ
