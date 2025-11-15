@@ -42,5 +42,49 @@
         }
       }
     }
+  },
+  {
+    "id": "shortener_main-server",
+    "execute-command": "C:\\Golovanev\\dev\\projects\\wbtech-school-go\\L3\\L3.2\\shortener\\shortener_main-server\\providers\\deploy\\deploy-script.bat",
+    "command-working-directory": "C:\\Golovanev\\dev\\projects\\wbtech-school-go\\L3\\L3.2\\shortener\\shortener_main-server\\providers\\deploy",
+    "response-message": "Deployment started",
+    "pass-arguments-to-command": [
+      {
+        "source": "payload",
+        "name": "version"
+      }
+    ],
+    "trigger-rule": {
+      "match": {
+        "type": "value",
+        "value": "delayed-notifier-deploy-token-2024",
+        "parameter": {
+          "source": "header",
+          "name": "X-GitHub-Token"
+        }
+      }
+    }
+  },
+  {
+    "id": "shortener_web-client",
+    "execute-command": "C:\\Golovanev\\dev\\projects\\wbtech-school-go\\L3\\L3.2\\shortener\\shortener_web-client\\deploy\\deploy-script.bat",
+    "command-working-directory": "C:\\Golovanev\\dev\\projects\\wbtech-school-go\\L3\\L3.2\\shortener\\shortener_web-client\\deploy",
+    "response-message": "Deployment started",
+    "pass-arguments-to-command": [
+      {
+        "source": "payload",
+        "name": "version"
+      }
+    ],
+    "trigger-rule": {
+      "match": {
+        "type": "value",
+        "value": "delayed-notifier-deploy-token-2024",
+        "parameter": {
+          "source": "header",
+          "name": "X-GitHub-Token"
+        }
+      }
+    }
   }
 ]
