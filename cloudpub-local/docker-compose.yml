@@ -1,0 +1,13 @@
+services:
+  cloudpub-local:
+    image: cloudpub/cloudpub:latest
+    container_name: ${CLOUDPUB_LOCAL_CONTAINER}
+    environment:
+      - TOKEN=${CLOUDPUB_LOCAL_TOKEN}
+      - HTTP=host.docker.internal:7777,host.docker.internal:7778
+    command: run
+    volumes:
+      - cloudpub-local-config:/home/cloudpub
+
+volumes:
+  cloudpub-local-config:

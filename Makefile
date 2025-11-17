@@ -260,6 +260,31 @@ cloudpub-exec:
 	$(MAKE_CMD) -C $(CLOUDPUB) exec
 
 # ========================
+# CLOUDPUB-LOCAL
+# ========================
+
+CLOUDPUB_LOCAL = cloudpub-local
+
+.PHONY: cloudpub-local-up cloudpub-local-logs cloudpub-local-stop cloudpub-local-restart cloudpub-local-rm cloudpub-local-down cloudpub-local-ps cloudpub-local-exec
+
+cloudpub-local-up:
+	$(MAKE_CMD) -C $(CLOUDPUB_LOCAL) up
+cloudpub-local-logs:
+	$(MAKE_CMD) -C $(CLOUDPUB_LOCAL) logs
+cloudpub-local-stop:
+	$(MAKE_CMD) -C $(CLOUDPUB_LOCAL) stop
+cloudpub-local-restart:
+	$(MAKE_CMD) -C $(CLOUDPUB_LOCAL) restart
+cloudpub-local-rm:
+	$(MAKE_CMD) -C $(CLOUDPUB_LOCAL) rm
+cloudpub-local-down:
+	$(MAKE_CMD) -C $(CLOUDPUB_LOCAL) down
+cloudpub-local-ps:
+	$(MAKE_CMD) -C $(CLOUDPUB_LOCAL) ps
+cloudpub-local-exec:
+	$(MAKE_CMD) -C $(CLOUDPUB_LOCAL) exec
+
+# ========================
 # CLOUDPUB-WEBHOOK
 # ========================
 
