@@ -369,3 +369,28 @@ prometheus-ps:
 	$(MAKE_CMD) -C $(PROMETHEUS) ps
 prometheus-exec:
 	$(MAKE_CMD) -C $(PROMETHEUS) exec
+
+# ========================
+# KAFKA
+# ========================
+
+KAFKA = kafka
+
+.PHONY: kafka-up kafka-logs kafka-stop kafka-restart kafka-rm kafka-down kafka-ps kafka-exec
+
+kafka-up:
+	$(MAKE_CMD) -C $(KAFKA) up
+kafka-logs:
+	$(MAKE_CMD) -C $(KAFKA) logs
+kafka-stop:
+	$(MAKE_CMD) -C $(KAFKA) stop
+kafka-restart:
+	$(MAKE_CMD) -C $(KAFKA) restart
+kafka-rm:
+	$(MAKE_CMD) -C $(KAFKA) rm
+kafka-down:
+	$(MAKE_CMD) -C $(KAFKA) down
+kafka-ps:
+	$(MAKE_CMD) -C $(KAFKA) ps
+kafka-exec:
+	$(MAKE_CMD) -C $(KAFKA) exec
