@@ -1,11 +1,11 @@
 @echo off
-title Webhook Server - delayed-notifier_main-server
+title Webhook Server
 echo ========================================
 echo    Webhook Server for CI/CD Deploy
 echo ========================================
 echo.
 
-cd /d "C:\Golovanev\Dev\SDK\webhook"
+cd /d "C:\Golovanev\dev\projects\vortex\webhook"
 
 if not exist "webhook.exe" (
     echo ERROR: webhook.exe not found in current directory
@@ -15,21 +15,20 @@ if not exist "webhook.exe" (
     exit /b 1
 )
 
-if not exist "hooks.json" (
-    echo ERROR: hooks.json not found in current directory
-    echo Current directory: %CD%
-    echo Create hooks.json configuration file first
-    pause
-    exit /b 1
+if not exist "hooks" (
+    echo Creating hooks directory...
+    mkdir hooks
 )
 
 echo Starting webhook server with configuration:
-echo - Config file: %CD%\hooks.json
+echo - Config directory: %CD%\hooks
 echo - Hot reload: enabled
 echo - Verbose logging: enabled
 echo.
-echo Webhook will be available at:
-echo http://your-pc-ip:9000/hooks/delayed-notifier-deploy
+echo Available webhooks:
+for %%f in (hooks\*.json) do (
+    echo https://affluently-big-mouflon.cloudpub.ru/hooks/%%~nf
+)
 echo.
 echo Press Ctrl+C to stop the server
 echo ========================================

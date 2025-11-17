@@ -10,5 +10,5 @@ services:
     entrypoint: [
       "migrate",
       "-path", "/migrations",
-      "-database", "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_MASTER_PORT}/${POSTGRES_DB}?sslmode=disable"
+      "-database", "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_MASTER_HOST}:${POSTGRES_MASTER_PORT}/${POSTGRES_DB}?sslmode=disable"
     ]

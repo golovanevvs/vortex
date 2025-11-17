@@ -14,6 +14,22 @@ upstream delayed_notifier_web_client_backend {
     server delayed-notifier_web-client:7778;
 }
 
+upstream shortener_main_server_backend {
+    server shortener_main-server:7779;
+}
+
+upstream shortener_web_client_backend {
+    server shortener_web-client:7780;
+}
+
+upstream comment_tree_main_server_backend {
+    server comment-tree_main-server:7781;
+}
+
+upstream comment_tree_web_client_backend {
+    server comment-tree_web-client:7782;
+}
+
 server {
     listen 80 default_server;
     server_name incompletely-elemental-moonfish.cloudpub.ru;
@@ -64,7 +80,7 @@ server {
         return 302 /rabbitmq/;
     }
 
-    # Main Server
+    # delayed-notifier_main-server
     location /delayed-notifier_main-server/ {
         proxy_pass http://delayed_notifier_main_server_backend/;
         proxy_set_header Host $host;
@@ -130,7 +146,7 @@ server {
         proxy_read_timeout 15s;
     }
 
-    # Delayed Notifier Web Client
+    # delayed-notifier_main-server
     location /delayed-notifier_web-client/ {
         proxy_pass http://delayed_notifier_web_client_backend/;
         proxy_set_header Host $host;
@@ -151,6 +167,158 @@ server {
         proxy_read_timeout 15s;
     }
 
+    # shortener_main-server
+    location /shortener_main-server/ {
+        proxy_pass http://shortener_main_server_backend/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        
+        add_header Access-Control-Allow-Origin "*" always;
+        add_header Access-Control-Allow-Methods "GET, POST, OPTIONS, PUT, DELETE" always;
+        add_header Access-Control-Allow-Headers "Origin, X-Requested-With, Content-Type, Accept, Authorization" always;
+        
+        if ($request_method = 'OPTIONS') {
+            add_header Access-Control-Allow-Origin "*";
+            add_header Access-Control-Allow-Methods "GET, POST, OPTIONS, PUT, DELETE";
+            add_header Access-Control-Allow-Headers "Origin, X-Requested-With, Content-Type, Accept, Authorization";
+            return 204;
+        }
+        
+        proxy_connect_timeout 15s;
+        proxy_send_timeout 15s;
+        proxy_read_timeout 15s;
+    }
+
+    location /s/ {
+        proxy_pass http://shortener_main_server_backend/s/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Host $host;
+
+        proxy_connect_timeout 15s;
+        proxy_send_timeout 15s;
+            proxy_read_timeout 15s;
+    }
+
+    # Favicon for shortener_web-client
+    location = /shortener_web-client/favicon.ico {
+        proxy_pass http://shortener_web_client_backend/favicon.ico;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        
+        expires -1;
+        add_header Cache-Control "no-cache, no-store, must-revalidate";
+        add_header Pragma "no-cache";
+        
+        proxy_connect_timeout 5s;
+        proxy_send_timeout 5s;
+        proxy_read_timeout 5s;
+    }
+
+    # shortener_web-client
+    location /shortener_web-client/ {
+        proxy_pass http://shortener_web_client_backend/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Host $host;
+        
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_cache_bypass $http_upgrade;
+        
+        proxy_redirect off;
+        
+        proxy_connect_timeout 15s;
+        proxy_send_timeout 15s;
+        proxy_read_timeout 15s;
+    }
+
+    # comment-tree_main-server
+    location /comment-tree_main-server/ {
+        proxy_pass http://comment_tree_main_server_backend/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        
+        add_header Access-Control-Allow-Origin "*" always;
+        add_header Access-Control-Allow-Methods "GET, POST, OPTIONS, PUT, DELETE" always;
+        add_header Access-Control-Allow-Headers "Origin, X-Requested-With, Content-Type, Accept, Authorization" always;
+        
+        if ($request_method = 'OPTIONS') {
+            add_header Access-Control-Allow-Origin "*";
+            add_header Access-Control-Allow-Methods "GET, POST, OPTIONS, PUT, DELETE";
+            add_header Access-Control-Allow-Headers "Origin, X-Requested-With, Content-Type, Accept, Authorization";
+            return 204;
+        }
+        
+        proxy_connect_timeout 15s;
+        proxy_send_timeout 15s;
+        proxy_read_timeout 15s;
+    }
+    
+    # Favicon for comment-tree_web-client
+    location = /comment-tree_web-client/favicon.ico {
+        proxy_pass http://comment_tree_web_client_backend/favicon.ico;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        
+        expires -1;
+        add_header Cache-Control "no-cache, no-store, must-revalidate";
+        add_header Pragma "no-cache";
+        
+        proxy_connect_timeout 5s;
+        proxy_send_timeout 5s;
+        proxy_read_timeout 5s;
+    }
+
+    # comment-tree_web-client
+    location /comment-tree_web-client/ {
+        proxy_pass http://comment_tree_web_client_backend/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Host $host;
+        
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_cache_bypass $http_upgrade;
+        
+        proxy_redirect off;
+        
+        proxy_connect_timeout 15s;
+        proxy_send_timeout 15s;
+        proxy_read_timeout 15s;
+    }
+
+    location /comment-tree_web-client/_next/ {
+        proxy_pass http://comment_tree_web_client_backend/_next/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+
+        proxy_connect_timeout 15s;
+        proxy_send_timeout 15s;
+        proxy_read_timeout 15s;
+}
+
     # Root
     location / {
         add_header Content-Type text/html;
@@ -160,6 +328,8 @@ server {
                 <li><a href="/grafana/">Grafana</a></li>
                 <li><a href="/rabbitmq/">RabbitMQ</a></li>
                 <li><a href="/delayed-notifier_web-client/">Delayed Notifier</a></li>
+                <li><a href="/shortener_web-client/">Shortener</a></li>
+                <li><a href="/comment-tree_web-client/">Comment Tree</a></li>
             </ul>
             </body></html>';
     }
