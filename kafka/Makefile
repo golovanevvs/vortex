@@ -49,13 +49,18 @@ ps:
 exec:
 	docker compose -p $(PROJECT_NAME) exec $(SERVICE_NAME) sh
 
+create-topic:
+	@echo "Creating Kafka topic: $(TOPIC)"
+	docker exec $(KAFKA_CONTAINER) kafka-topics --create --topic $(TOPIC) --bootstrap-server localhost:9092
+	@echo "Topic $(TOPIC) created."
+
 # ========================
 # KAFKA
 # ========================
 
 # KAFKA = kafka
 
-# .PHONY: kafka-up kafka-logs kafka-stop kafka-restart kafka-rm kafka-down kafka-ps kafka-exec
+# .PHONY: kafka-up kafka-logs kafka-stop kafka-restart kafka-rm kafka-down kafka-ps kafka-exec kafka-create-topic
 
 # kafka-up:
 # 	$(MAKE_CMD) -C $(KAFKA) up
@@ -73,3 +78,5 @@ exec:
 # 	$(MAKE_CMD) -C $(KAFKA) ps
 # kafka-exec:
 # 	$(MAKE_CMD) -C $(KAFKA) exec
+# kafka-create-topic:
+# 	$(MAKE_CMD) -C $(KAFKA) create-topic TOPIC="$(TOPIC)"

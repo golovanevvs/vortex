@@ -376,7 +376,7 @@ prometheus-exec:
 
 KAFKA = kafka
 
-.PHONY: kafka-up kafka-logs kafka-stop kafka-restart kafka-rm kafka-down kafka-ps kafka-exec
+.PHONY: kafka-up kafka-logs kafka-stop kafka-restart kafka-rm kafka-down kafka-ps kafka-exec kafka-create-topic
 
 kafka-up:
 	$(MAKE_CMD) -C $(KAFKA) up
@@ -394,3 +394,5 @@ kafka-ps:
 	$(MAKE_CMD) -C $(KAFKA) ps
 kafka-exec:
 	$(MAKE_CMD) -C $(KAFKA) exec
+kafka-create-topic:
+	$(MAKE_CMD) -C $(KAFKA) create-topic TOPIC="$(TOPIC)"
