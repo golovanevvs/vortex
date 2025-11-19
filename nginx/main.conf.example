@@ -350,6 +350,22 @@ server {
         proxy_send_timeout 15s;
         proxy_read_timeout 15s;
     }
+
+    # image-processor uploads
+location /image-processor_main-server/uploads/ {
+    proxy_pass http://image_processor_main_server_backend/uploads/;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+
+    expires 1y;
+    add_header Cache-Control "public, immutable";
+
+    proxy_connect_timeout 15s;
+    proxy_send_timeout 15s;
+    proxy_read_timeout 15s;
+}
     
     # Favicon for image-processor_web-client
     location = /image-processor_web-client/favicon.ico {
@@ -368,6 +384,22 @@ server {
         proxy_read_timeout 5s;
     }
 
+    # image-processor_web-client/_next/
+    location /image-processor_web-client/_next/ {
+        proxy_pass http://image_processor_web_client_backend/_next/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+
+        proxy_connect_timeout 15s;
+        proxy_send_timeout 15s;
+        proxy_read_timeout 15s;
+    }
+
     # image-processor_web-client
     location /image-processor_web-client/ {
         proxy_pass http://image_processor_web_client_backend/;
@@ -384,21 +416,6 @@ server {
         
         proxy_redirect off;
         
-        proxy_connect_timeout 15s;
-        proxy_send_timeout 15s;
-        proxy_read_timeout 15s;
-    }
-
-    location /image-processor_web-client/_next/ {
-        proxy_pass http://image_processor_web_client_backend/_next/;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-
-        expires 1y;
-        add_header Cache-Control "public, immutable";
-
         proxy_connect_timeout 15s;
         proxy_send_timeout 15s;
         proxy_read_timeout 15s;
