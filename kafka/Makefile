@@ -51,7 +51,12 @@ exec:
 
 create-topic:
 	@echo "Creating Kafka topic: $(TOPIC)"
-	docker exec $(KAFKA_CONTAINER) kafka-topics --create --topic $(TOPIC) --bootstrap-server localhost:9092
+	docker exec $(KAFKA_CONTAINER) kafka-topics --create \
+        --topic $(TOPIC) \
+        --bootstrap-server localhost:9092 \
+        --partitions 1 \
+        --replication-factor 1 \
+        --if-not-exists
 	@echo "Topic $(TOPIC) created."
 
 # ========================
