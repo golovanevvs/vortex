@@ -12,6 +12,16 @@ scrape_configs:
     static_configs:
       - targets: ['shortener_main-server:7779']
     metrics_path: /metrics
+  
+  - job_name: 'comment-tree'
+    static_configs:
+      - targets: ['app:7781']
+    metrics_path: /metrics
+  
+  - job_name: 'image-processor'
+    static_configs:
+      - targets: ['app:7783']
+    metrics_path: /metrics
 
   - job_name: 'node'
     static_configs:

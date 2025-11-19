@@ -1,6 +1,6 @@
 MAKEFLAGS += --no-print-directory
 
-ENV_FILES := .env ../.env
+ENV_FILES := .env
 $(foreach file,$(ENV_FILES),\
     $(if $(wildcard $(file)),\
         $(eval include $(file))\
