@@ -68,7 +68,7 @@ server {
         proxy_connect_timeout 15s;
         proxy_send_timeout 15s;
         proxy_read_timeout 15s;
-}
+    }
 
     location = /grafana {
         return 302 /grafana/;
@@ -136,8 +136,6 @@ server {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
         
-       
-
         expires -1;
         add_header Cache-Control "no-cache, no-store, must-revalidate";
         add_header Pragma "no-cache";
@@ -162,7 +160,7 @@ server {
         proxy_read_timeout 15s;
     }
 
-    # delayed-notifier_main-server
+    # delayed-notifier_web-client
     location /delayed-notifier_web-client/ {
         proxy_pass http://delayed_notifier_web_client_backend/;
         proxy_set_header Host $host;
@@ -217,7 +215,7 @@ server {
 
         proxy_connect_timeout 15s;
         proxy_send_timeout 15s;
-            proxy_read_timeout 15s;
+        proxy_read_timeout 15s;
     }
 
     # Favicon for shortener_web-client
@@ -258,6 +256,21 @@ server {
         proxy_read_timeout 15s;
     }
 
+    location /shortener_web-client/_next/ {
+        proxy_pass http://shortener_web_client_backend/_next/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+
+        proxy_connect_timeout 15s;
+        proxy_send_timeout 15s;
+        proxy_read_timeout 15s;
+    }
+    
     # comment-tree_main-server
     location /comment-tree_main-server/ {
         proxy_pass http://comment_tree_main_server_backend/;
@@ -334,7 +347,7 @@ server {
         proxy_send_timeout 15s;
         proxy_read_timeout 15s;
     }
-    
+
     # image-processor_main-server
     location /image-processor_main-server/ {
         proxy_pass http://image_processor_main_server_backend/;

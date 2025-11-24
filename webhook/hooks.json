@@ -177,8 +177,8 @@
   },
   {
     "id": "event-booker_main-server",
-    "execute-command": "C:\\Golovanev\\dev\\projects\\wbtech-school-go\\L3\\L3.4\\event-booker\\event-booker_main-server\\providers\\deploy\\deploy-script.bat",
-    "command-working-directory": "C:\\Golovanev\\dev\\projects\\wbtech-school-go\\L3\\L3.4\\event-booker\\event-booker_main-server\\providers\\deploy",
+    "execute-command": "C:\\Golovanev\\dev\\projects\\wbtech-school-go\\L3\\L3.5\\event-booker\\event-booker_main-server\\providers\\deploy\\deploy-script.bat",
+    "command-working-directory": "C:\\Golovanev\\dev\\projects\\wbtech-school-go\\L3\\L3.5\\event-booker\\event-booker_main-server\\providers\\deploy",
     "response-message": "Deployment started",
     "pass-arguments-to-command": [
       {
@@ -199,8 +199,8 @@
   },
   {
     "id": "event-booker_web-client",
-    "execute-command": "C:\\Golovanev\\dev\\projects\\wbtech-school-go\\L3\\L3.4\\event-booker\\event-booker_web-client\\deploy\\deploy-script.bat",
-    "command-working-directory": "C:\\Golovanev\\dev\\projects\\wbtech-school-go\\L3\\L3.4\\event-booker\\event-booker_web-client\\deploy",
+    "execute-command": "C:\\Golovanev\\dev\\projects\\wbtech-school-go\\L3\\L3.5\\event-booker\\event-booker_web-client\\deploy\\deploy-script.bat",
+    "command-working-directory": "C:\\Golovanev\\dev\\projects\\wbtech-school-go\\L3\\L3.5\\event-booker\\event-booker_web-client\\deploy",
     "response-message": "Deployment started",
     "pass-arguments-to-command": [
       {
