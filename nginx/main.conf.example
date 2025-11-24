@@ -38,10 +38,17 @@ upstream image_processor_web_client_backend {
     server image-processor_web-client:7784;
 }
 
+upstream event_booker_main_server_backend {
+    server event-booker_main-server:7785;
+}
+
+upstream event_booker_web_client_backend {
+    server event-booker_web-client:7786;
+}
+
 server {
     listen 80 default_server;
     server_name incompletely-elemental-moonfish.cloudpub.ru;
-    client_max_body_size 50M;
 
     location /health {
         access_log off;
@@ -351,22 +358,6 @@ server {
         proxy_send_timeout 15s;
         proxy_read_timeout 15s;
     }
-
-    # image-processor uploads
-    location /image-processor_main-server/uploads/ {
-        proxy_pass http://image_processor_main_server_backend/uploads/;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-
-        expires 1y;
-        add_header Cache-Control "public, immutable";
-
-        proxy_connect_timeout 15s;
-        proxy_send_timeout 15s;
-        proxy_read_timeout 15s;
-    }
     
     # Favicon for image-processor_web-client
     location = /image-processor_web-client/favicon.ico {
@@ -383,22 +374,6 @@ server {
         proxy_connect_timeout 5s;
         proxy_send_timeout 5s;
         proxy_read_timeout 5s;
-    }
-
-    # image-processor_web-client/_next/
-    location /image-processor_web-client/_next/ {
-        proxy_pass http://image_processor_web_client_backend/_next/;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-
-        expires 1y;
-        add_header Cache-Control "public, immutable";
-
-        proxy_connect_timeout 15s;
-        proxy_send_timeout 15s;
-        proxy_read_timeout 15s;
     }
 
     # image-processor_web-client
@@ -422,6 +397,98 @@ server {
         proxy_read_timeout 15s;
     }
 
+    location /image-processor_web-client/_next/ {
+        proxy_pass http://image_processor_web_client_backend/_next/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+
+        proxy_connect_timeout 15s;
+        proxy_send_timeout 15s;
+        proxy_read_timeout 15s;
+    }
+
+    # event-booker_main-server
+    location /event-booker_main-server/ {
+        proxy_pass http://event_booker_main_server_backend/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        
+        add_header Access-Control-Allow-Origin "*" always;
+        add_header Access-Control-Allow-Methods "GET, POST, OPTIONS, PUT, DELETE" always;
+        add_header Access-Control-Allow-Headers "Origin, X-Requested-With, Content-Type, Accept, Authorization" always;
+        
+        if ($request_method = 'OPTIONS') {
+            add_header Access-Control-Allow-Origin "*";
+            add_header Access-Control-Allow-Methods "GET, POST, OPTIONS, PUT, DELETE";
+            add_header Access-Control-Allow-Headers "Origin, X-Requested-With, Content-Type, Accept, Authorization";
+            return 204;
+        }
+        
+        proxy_connect_timeout 15s;
+        proxy_send_timeout 15s;
+        proxy_read_timeout 15s;
+    }
+    
+    # Favicon for event-booker_web-client
+    location = /event-booker_web-client/favicon.ico {
+        proxy_pass http://event_booker_web_client_backend/favicon.ico;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        
+        expires -1;
+        add_header Cache-Control "no-cache, no-store, must-revalidate";
+        add_header Pragma "no-cache";
+        
+        proxy_connect_timeout 5s;
+        proxy_send_timeout 5s;
+        proxy_read_timeout 5s;
+    }
+
+    # event-booker_web-client
+    location /event-booker_web-client/ {
+        proxy_pass http://event_booker_web_client_backend/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Host $host;
+        
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_cache_bypass $http_upgrade;
+        
+        proxy_redirect off;
+        
+        proxy_connect_timeout 15s;
+        proxy_send_timeout 15s;
+        proxy_read_timeout 15s;
+    }
+
+    location /event-booker_web-client/_next/ {
+        proxy_pass http://event_booker_web_client_backend/_next/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+
+        proxy_connect_timeout 15s;
+        proxy_send_timeout 15s;
+        proxy_read_timeout 15s;
+    }
+
     # Root
     location / {
         add_header Content-Type text/html;
@@ -434,6 +501,7 @@ server {
                 <li><a href="/shortener_web-client/">Shortener</a></li>
                 <li><a href="/comment-tree_web-client/">Comment Tree</a></li>
                 <li><a href="/image-processor_web-client/">Image Processor</a></li>
+                <li><a href="/event-booker_web-client/">Event Booker</a></li>
             </ul>
             </body></html>';
     }
