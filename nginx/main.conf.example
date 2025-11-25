@@ -600,7 +600,7 @@ server {
                 <li><a href="/comment-tree_web-client/">Comment Tree</a></li>
                 <li><a href="/image-processor_web-client/">Image Processor</a></li>
                 <li><a href="/event-booker_web-client/">Event Booker</a></li>
-                <li><a href="/sales-tracker_web-client/">Event Booker</a></li>
+                <li><a href="/sales-tracker_web-client/">Sales Tracker</a></li>
             </ul>
             </body></html>';
     }
