@@ -47,11 +47,11 @@ upstream event_booker_web_client_backend {
 }
 
 upstream sales_tracker_main_server_backend {
-    server sales-tracker_main-server:7785;
+    server sales-tracker_main-server:7787;
 }
 
 upstream sales_tracker_web_client_backend {
-    server sales-tracker_web-client:7786;
+    server sales-tracker_web-client:7788;
 }
 
 server {
