@@ -15,12 +15,37 @@ scrape_configs:
   
   - job_name: 'comment-tree'
     static_configs:
-      - targets: ['app:7781']
+      - targets: ['comment-tree_main-server:7781']
     metrics_path: /metrics
   
   - job_name: 'image-processor'
     static_configs:
-      - targets: ['app:7783']
+      - targets: ['image-processor_main-server:7783']
+    metrics_path: /metrics
+
+  - job_name: 'event-booker'
+    static_configs:
+      - targets: ['event-booker_main-server:7785']
+    metrics_path: /metrics
+
+  - job_name: 'sales-tracker'
+    static_configs:
+      - targets: ['sales-tracker_main-server:7787']
+    metrics_path: /metrics
+
+  - job_name: 'warehouse-control'
+    static_configs:
+      - targets: ['warehouse-control_main-server:7789']
+    metrics_path: /metrics
+
+  - job_name: 'calendar'
+    static_configs:
+      - targets: ['calendar_main-server:7791']
+    metrics_path: /metrics
+
+  - job_name: 'shortener-opt'
+    static_configs:
+      - targets: ['shortener-opt_main-server:7793']
     metrics_path: /metrics
 
   - job_name: 'node'
