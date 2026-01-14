@@ -43,14 +43,14 @@
 
 WITH
     alldays AS (
-        SELECT COUNT(DISTINCT player_id) cnt
+        SELECT COUNT(DISTINCT player_id) AS cnt
         FROM activity
     ),
     sdays AS (
-        SELECT player_id
+        SELECT COUNT(*) AS cnt
         FROM activity
         GROUP BY player_id
         HAVING MIN(event_date) <> MAX(event_date)
     )
-SELECT ROUND(COUNT(*)*1.0/alldays.cnt,2) AS fraction
+SELECT ROUND(sdays.cnt*1.0/alldays.cnt,2) AS fraction
 FROM sdays, alldays
