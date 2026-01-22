@@ -17,7 +17,13 @@ services:
       - "127.0.0.1:8123:8123"
       - "127.0.0.1:9000:9000"
     volumes:
-      - ${PWD}/clickhouse01:/etc/clickhouse-server
+      - ./clickhouse01/data:/var/lib/clickhouse
+      - ./clickhouse01/logs:/var/log/clickhouse-server
+      - ./clickhouse01/config.d:/etc/clickhouse-server/config.d
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
     depends_on:
       - zookeeper
   clickhouse02:
@@ -28,7 +34,13 @@ services:
       clickhouse-network:
         ipv4_address: 172.23.0.12
     volumes:
-      - ${PWD}/clickhouse02:/etc/clickhouse-server
+      - ./clickhouse02/data:/var/lib/clickhouse
+      - ./clickhouse02/logs:/var/log/clickhouse-server
+      - ./clickhouse02/config.d:/etc/clickhouse-server/config.d
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
     depends_on:
       - zookeeper
   clickhouse03:
@@ -39,7 +51,13 @@ services:
       clickhouse-network:
         ipv4_address: 172.23.0.13
     volumes:
-      - ${PWD}/clickhouse03:/etc/clickhouse-server
+      - ./clickhouse03/data:/var/lib/clickhouse
+      - ./clickhouse03/logs:/var/log/clickhouse-server
+      - ./clickhouse03/config.d:/etc/clickhouse-server/config.d
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
     depends_on:
       - zookeeper
   clickhouse04:
@@ -50,7 +68,13 @@ services:
       clickhouse-network:
         ipv4_address: 172.23.0.14
     volumes:
-      - ${PWD}/clickhouse04:/etc/clickhouse-server
+      - ./clickhouse04/data:/var/lib/clickhouse
+      - ./clickhouse04/logs:/var/log/clickhouse-server
+      - ./clickhouse04/config.d:/etc/clickhouse-server/config.d
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
     depends_on:
       - zookeeper
 

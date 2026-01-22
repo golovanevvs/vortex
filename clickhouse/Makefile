@@ -1,15 +1,18 @@
 .PHONY: config
 config:
-	rm -rf clickhouse01 clickhouse02 clickhouse03 clickhouse04
-	mkdir -p clickhouse01 clickhouse02 clickhouse03 clickhouse04
-	REPLICA=01 SHARD=01 envsubst < config.xml > clickhouse01/config.xml
-	REPLICA=02 SHARD=01 envsubst < config.xml > clickhouse02/config.xml
-	REPLICA=03 SHARD=02 envsubst < config.xml > clickhouse03/config.xml
-	REPLICA=04 SHARD=02 envsubst < config.xml > clickhouse04/config.xml
-	cp users.xml clickhouse01/users.xml
-	cp users.xml clickhouse02/users.xml
-	cp users.xml clickhouse03/users.xml
-	cp users.xml clickhouse04/users.xml
+		rm -rf clickhouse01 clickhouse02 clickhouse03 clickhouse04
+		mkdir -p clickhouse01/data clickhouse01/logs clickhouse01/config.d
+		mkdir -p clickhouse02/data clickhouse02/logs clickhouse02/config.d
+		mkdir -p clickhouse03/data clickhouse03/logs clickhouse03/config.d
+		mkdir -p clickhouse04/data clickhouse04/logs clickhouse04/config.d
+		REPLICA=01 SHARD=01 envsubst < config.xml > clickhouse01/config.d/config.xml
+		REPLICA=02 SHARD=01 envsubst < config.xml > clickhouse02/config.d/config.xml
+		REPLICA=03 SHARD=02 envsubst < config.xml > clickhouse03/config.d/config.xml
+		REPLICA=04 SHARD=02 envsubst < config.xml > clickhouse04/config.d/config.xml
+		cp users.xml clickhouse01/config.d/users.xml
+		cp users.xml clickhouse02/config.d/users.xml
+		cp users.xml clickhouse03/config.d/users.xml
+		cp users.xml clickhouse04/config.d/users.xml
 
 .PHONY: up
 up:

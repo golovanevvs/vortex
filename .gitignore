@@ -33,3 +33,8 @@ go.work.sum
 .vscode/
 /nginx/main.conf
 /nginx/nginx.conf
+
+/clickhouse/clickhouse01
+/clickhouse/clickhouse02
+/clickhouse/clickhouse03
+/clickhouse/clickhouse04

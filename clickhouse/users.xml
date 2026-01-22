@@ -19,7 +19,7 @@
             <quota>default</quota>
         </default>
         <admin>
-            <password>123</password>
+            <password>SecurePassword123!</password>
             <profile>default</profile>
             <networks>
                 <ip>::/0</ip>
