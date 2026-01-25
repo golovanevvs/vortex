@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<company>
+<clickhouse>
     <profiles>
         <default>
             <max_memory_usage>10000000000</max_memory_usage>
@@ -26,6 +26,14 @@
             </networks>
             <quota>default</quota>
         </admin>
+        <golovanevvs>
+            <password>SecurePassword123!</password>
+            <profile>default</profile>
+            <networks>
+                <ip>::/0</ip>
+            </networks>
+            <quota>default</quota>
+        </golovanevvs>
     </users>
 
     <quotas>
@@ -40,4 +48,4 @@
             </interval>
         </default>
     </quotas>
-</company>
+</clickhouse>

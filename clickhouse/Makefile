@@ -26,6 +26,14 @@ start:
 stop:
 	docker-compose stop
 
+.PHONY: create-db
+create-db:
+	docker exec clickhouse01 clickhouse-client --query="CREATE DATABASE IF NOT EXISTS clickhouse_course"
+
+.PHONY: list-db
+list-db:
+	docker exec clickhouse01 clickhouse-client --query="SHOW DATABASES"
+
 .PHONY: down
 down:
 	docker-compose down
